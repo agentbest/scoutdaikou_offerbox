@@ -1,376 +1,496 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OfferBox運用代行サービス | 完全成果報酬型 | 株式会社エージェントベスト</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Noto Sans JP', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-shadow { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .hover-scale { transition: transform 0.3s ease; }
-        .hover-scale:hover { transform: translateY(-5px); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OfferBox運用代行｜完全成果報酬型｜株式会社エージェントベスト</title>
+<meta name="description" content="OfferBox運用代行の完全成果報酬型サービス。成果が出なければ費用は0円。専門チームが新卒採用のスカウト運用を代行します。">
+
+<style>
+  :root{
+    --paper:#F3F6FB;--surface:#FFFFFF;--surface-2:#E9EFF8;
+    --ink:#0E1B30;--ink-soft:#48586F;--ink-faint:#8291A5;
+    --line:#E0E8F2;--line-strong:#CAD6E5;
+    --accent:#2563EB;--accent-strong:#1D4FD0;--accent-ink:#1A46B8;--accent-tint:#E4ECFE;
+    --success:#12A150;--success-ink:#0B7A3B;--success-tint:#DCF3E6;
+    --navy:#0B1A32;--on-navy:#EAF0F8;--on-navy-soft:#9CB0CB;--on-navy-line:#20324D;
+    --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",YuGothic,"Noto Sans JP","Segoe UI",sans-serif;
+    --mono:"SFMono-Regular","SF Mono","Cascadia Code",Consolas,"Roboto Mono",monospace;
+    --maxw:1080px;--radius:16px;
+    --shadow:0 1px 2px rgba(14,27,48,.05),0 16px 38px -20px rgba(14,27,48,.26);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#070D18;--surface:#0F1826;--surface-2:#0C1420;--ink:#E9EEF6;--ink-soft:#A2B0C6;--ink-faint:#6F7E95;
+      --line:#1D2A3D;--line-strong:#2A3B54;--accent:#4B84F5;--accent-strong:#6699FF;--accent-ink:#7EA6FF;--accent-tint:#12203A;
+      --success:#2BC073;--success-ink:#4BD98D;--success-tint:#0E2419;--navy:#050B15;--navy-2:#0A1524;
+      --on-navy:#EAF0F8;--on-navy-soft:#93A6C0;--on-navy-line:#182740;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 20px 44px -22px rgba(0,0,0,.72);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F3F6FB;--surface:#FFFFFF;--surface-2:#E9EFF8;--ink:#0E1B30;--ink-soft:#48586F;--ink-faint:#8291A5;
+    --line:#E0E8F2;--line-strong:#CAD6E5;--accent:#2563EB;--accent-strong:#1D4FD0;--accent-ink:#1A46B8;--accent-tint:#E4ECFE;
+    --success:#12A150;--success-ink:#0B7A3B;--success-tint:#DCF3E6;--navy:#0B1A32;--on-navy:#EAF0F8;--on-navy-soft:#9CB0CB;--on-navy-line:#20324D;
+    --shadow:0 1px 2px rgba(14,27,48,.05),0 16px 38px -20px rgba(14,27,48,.26);
+  }
+  :root[data-theme="dark"]{
+    --paper:#070D18;--surface:#0F1826;--surface-2:#0C1420;--ink:#E9EEF6;--ink-soft:#A2B0C6;--ink-faint:#6F7E95;
+    --line:#1D2A3D;--line-strong:#2A3B54;--accent:#4B84F5;--accent-strong:#6699FF;--accent-ink:#7EA6FF;--accent-tint:#12203A;
+    --success:#2BC073;--success-ink:#4BD98D;--success-tint:#0E2419;--navy:#050B15;--on-navy:#EAF0F8;--on-navy-soft:#93A6C0;--on-navy-line:#182740;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 20px 44px -22px rgba(0,0,0,.72);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.75;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+  h1,h2,h3,h4,p{margin:0}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:.95rem;padding:14px 26px;border-radius:11px;
+    cursor:pointer;border:1px solid transparent;transition:transform .15s ease,background .2s ease,box-shadow .2s ease;white-space:nowrap}
+  .btn-primary{background:var(--success);color:#fff;box-shadow:0 10px 26px -10px var(--success)}
+  .btn-primary:hover{background:var(--success-ink);transform:translateY(-2px)}
+  .btn-ghost{border-color:var(--line-strong);color:var(--ink);background:var(--surface)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent-ink)}
+  .btn-lg{padding:17px 34px;font-size:1.02rem}
+  .btn .arw{font-family:var(--mono)}
+
+  /* nav */
+  header.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 86%,transparent);
+    backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:800}
+  .brand .mk{width:30px;height:30px;border-radius:8px;flex:none;background:linear-gradient(145deg,var(--accent),var(--success));
+    display:grid;place-items:center;color:#fff;font-family:var(--mono);font-size:.82rem;font-weight:700}
+  .brand .nm{font-size:.98rem;line-height:1.2}
+  .brand .nm small{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;color:var(--ink-faint);font-weight:600}
+  .nav .cta-mini{font-size:.9rem;padding:10px 20px}
+  @media (max-width:560px){.brand .nm .full{display:none}}
+
+  /* hero */
+  .hero{position:relative;background:var(--navy);color:var(--on-navy);overflow:hidden;border-bottom:1px solid var(--on-navy-line)}
+  .hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(48% 44% at 86% 6%,rgba(37,99,235,.28),transparent 62%),
+      radial-gradient(42% 42% at 6% 96%,rgba(18,161,80,.22),transparent 64%)}
+  .hero-grid{position:absolute;inset:0;opacity:.5;pointer-events:none;
+    background-image:linear-gradient(var(--on-navy-line) 1px,transparent 1px);background-size:100% 48px;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 16%,#000 74%,transparent);
+            mask-image:linear-gradient(180deg,transparent,#000 16%,#000 74%,transparent)}
+  .hero-in{position:relative;padding:66px 0 54px}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--on-navy);font-weight:700;background:rgba(255,255,255,.08);
+    border:1px solid var(--on-navy-line);padding:7px 14px;border-radius:999px}
+  h1.hero-title{font-weight:900;letter-spacing:.005em;font-size:clamp(2.1rem,5.6vw,3.6rem);line-height:1.28;margin:22px 0 0;text-wrap:balance}
+  h1.hero-title .hl{color:var(--success);position:relative;white-space:nowrap}
+  .hero-lead{margin:22px 0 0;max-width:37em;color:var(--on-navy-soft);font-size:1.06rem}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin:30px 0 0;align-items:center}
+  .hero-cta .note{font-family:var(--mono);font-size:.72rem;color:var(--on-navy-soft)}
+  .hero-trust{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:44px 0 0}
+  .htile{background:rgba(255,255,255,.04);border:1px solid var(--on-navy-line);border-radius:13px;padding:18px}
+  .htile .n{font-family:var(--mono);font-weight:800;font-size:1.6rem;line-height:1;color:var(--on-navy);font-variant-numeric:tabular-nums}
+  .htile .n em{font-style:normal;font-size:.9rem;color:var(--success);margin-left:2px}
+  .htile .l{font-size:.76rem;color:var(--on-navy-soft);margin-top:8px}
+  @media (max-width:760px){.hero-trust{grid-template-columns:repeat(2,1fr)}}
+
+  /* sections */
+  section{padding:78px 0}
+  .band{background:var(--surface-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;flex-direction:column;gap:12px;margin-bottom:42px;max-width:46em}
+  .sec-head .kick{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
+  .sec-head.center{margin:0 auto 44px;text-align:center;align-items:center}
+  h2{font-weight:900;font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.34;text-wrap:balance}
+  .sec-head p{color:var(--ink-soft);font-size:1.02rem}
+
+  /* problem cards */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+  .pcard .ico{width:44px;height:44px;border-radius:11px;background:var(--accent-tint);color:var(--accent-ink);
+    display:grid;place-items:center;margin-bottom:16px}
+  .pcard h4{font-size:1.12rem;font-weight:800;margin-bottom:8px}
+  .pcard p{color:var(--ink-soft);font-size:.95rem}
+  @media (max-width:760px){.grid3{grid-template-columns:1fr}}
+
+  /* solution rows */
+  .sol{display:flex;flex-direction:column;gap:14px;max-width:900px;margin:0 auto}
+  .srow{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:flex-start;background:var(--surface);
+    border:1px solid var(--line);border-radius:var(--radius);padding:26px 30px;box-shadow:var(--shadow)}
+  .srow .no{width:46px;height:46px;border-radius:12px;flex:none;background:var(--navy);color:#fff;display:grid;place-items:center;
+    font-family:var(--mono);font-weight:800;font-size:1.1rem}
+  .srow:nth-child(1) .no{background:var(--success)}
+  .srow h4{font-size:1.18rem;font-weight:800;margin-bottom:6px}
+  .srow p{color:var(--ink-soft);font-size:.96rem}
+  .srow .tag{display:inline-block;font-family:var(--mono);font-size:.64rem;font-weight:700;letter-spacing:.08em;
+    padding:3px 9px;border-radius:6px;background:var(--success-tint);color:var(--success-ink);margin-bottom:8px}
+
+  /* stats */
+  .stat4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .scard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 22px;text-align:center}
+  .scard .n{font-family:var(--mono);font-weight:800;font-size:2.2rem;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .scard .n em{font-style:normal;font-size:.95rem;margin-left:1px}
+  .scard .l{margin-top:12px;font-size:.86rem;color:var(--ink-soft);font-weight:700}
+  .stat-note{margin-top:18px;font-family:var(--mono);font-size:.72rem;color:var(--ink-faint);text-align:center}
+  @media (max-width:760px){.stat4{grid-template-columns:repeat(2,1fr)}}
+
+  /* strengths */
+  .str{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .scell{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);
+    transition:transform .18s ease,border-color .18s ease}
+  .scell:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .scell .no{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;color:var(--accent-ink);font-weight:700}
+  .scell h4{font-size:1.12rem;font-weight:800;margin:12px 0 8px}
+  .scell p{color:var(--ink-soft);font-size:.94rem}
+  @media (max-width:760px){.str{grid-template-columns:1fr}}
+
+  /* testimonials */
+  .voices{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:900px){.voices{grid-template-columns:1fr 1fr}}
+  .voice{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);position:relative}
+  .voice .qm{font-family:var(--mono);font-size:2.4rem;line-height:.6;color:var(--accent);opacity:.35}
+  .voice blockquote{margin:8px 0 0;font-size:1.05rem;font-weight:600;line-height:1.7}
+  .voice .who{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px}
+  .voice .who .av{width:40px;height:40px;border-radius:11px;background:linear-gradient(140deg,var(--accent),var(--success));flex:none}
+  .voice .who b{font-size:.92rem}
+  .voice .who span{display:block;font-size:.78rem;color:var(--ink-faint)}
+  @media (max-width:680px){.voices{grid-template-columns:1fr}}
+
+  /* pricing */
+  .price{max-width:900px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+  .price-top{background:var(--navy);color:var(--on-navy);padding:34px 36px;text-align:center;position:relative;overflow:hidden}
+  .price-top::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 90% at 50% 0%,rgba(18,161,80,.22),transparent 60%)}
+  .price-top>*{position:relative}
+  .price-top .lbl{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--success)}
+  .price-top .amt{font-family:var(--mono);font-weight:800;font-size:clamp(2.6rem,7vw,3.8rem);line-height:1;margin-top:10px;font-variant-numeric:tabular-nums}
+  .price-top .amt small{font-size:.34em;font-weight:700;margin-left:4px}
+  .price-top .cap{color:var(--on-navy-soft);font-size:.9rem;margin-top:10px}
+  .price-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .price-col{padding:30px 34px}
+  .price-col+.price-col{border-left:1px solid var(--line)}
+  .price-col h4{font-size:1.02rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:9px}
+  .price-col h4 .dot{width:9px;height:9px;border-radius:50%;background:var(--success)}
+  .refund{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .refund li{display:flex;justify-content:space-between;align-items:center;font-size:.94rem;color:var(--ink-soft);
+    padding-bottom:10px;border-bottom:1px dashed var(--line-strong)}
+  .refund li:last-child{border-bottom:0;padding-bottom:0}
+  .refund li b{font-family:var(--mono);color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums}
+  .price-feat{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+  .price-feat li{display:flex;gap:11px;font-size:.94rem;color:var(--ink-soft)}
+  .price-feat li .ck{width:22px;height:22px;border-radius:50%;background:var(--success);color:#fff;flex:none;display:grid;place-items:center;font-size:.72rem;font-weight:800}
+  @media (max-width:680px){.price-body{grid-template-columns:1fr}.price-col+.price-col{border-left:0;border-top:1px solid var(--line)}}
+
+  /* flow */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:f}
+  .fstep{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;position:relative}
+  .fstep .no{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--accent-ink);font-weight:700}
+  .fstep h4{font-size:1.05rem;font-weight:800;margin:8px 0 6px}
+  .fstep p{font-size:.88rem;color:var(--ink-soft)}
+  .fstep .arw{position:absolute;right:-11px;top:50%;transform:translateY(-50%);color:var(--line-strong);font-family:var(--mono);font-weight:800;z-index:1}
+  .fstep:last-child .arw{display:none}
+  @media (max-width:760px){.flow{grid-template-columns:1fr 1fr}.fstep .arw{display:none}}
+  @media (max-width:440px){.flow{grid-template-columns:1fr}}
+
+  /* company */
+  .company{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;max-width:960px;margin:0 auto}
+  .cinfo{display:flex;flex-direction:column;gap:14px}
+  .cinfo .row{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;font-size:.95rem}
+  .cinfo .row .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink-faint);padding-top:3px;white-space:nowrap}
+  .cinfo .row .v{color:var(--ink)}
+  .cinfo .row .v a{color:var(--accent-ink);font-weight:700}
+  @media (max-width:680px){.company{grid-template-columns:1fr}}
+
+  /* final cta */
+  .final{position:relative;overflow:hidden;background:var(--navy);color:var(--on-navy);border-radius:22px;padding:56px 44px;text-align:center}
+  .final::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(46% 80% at 18% 6%,rgba(18,161,80,.24),transparent 60%),
+    radial-gradient(46% 80% at 86% 94%,rgba(37,99,235,.22),transparent 60%)}
+  .final>*{position:relative}
+  .final .lbl{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--success)}
+  .final h2{margin-top:14px}
+  .final p{color:var(--on-navy-soft);margin:16px auto 0;max-width:34em}
+  .final .hero-cta{justify-content:center;margin-top:28px}
+  .final .note{color:var(--on-navy-soft)}
+
+  footer.ft{border-top:1px solid var(--line);padding:40px 0;color:var(--ink-faint);font-size:.82rem}
+  .ft-links{display:flex;flex-wrap:wrap;gap:14px 24px;margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+  .ft-links a{color:var(--ink-soft);font-weight:700;font-size:.9rem}
+  .ft-links a:hover{color:var(--accent-ink)}
+  .ft-tag{line-height:1.7}
+
+  .rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+</style>
 </head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-gray-800">株式会社エージェントベスト</h1>
-                </div>
-                <div class="text-sm text-gray-600">
-                    <i class="fas fa-phone mr-2"></i>お問い合わせは公式サイトまで
-                </div>
-            </div>
-        </div>
-    </header>
+<body>
 
-    <!-- Hero Section -->
-    <section class="gradient-bg text-white py-20">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col lg:flex-row items-center">
-                <div class="lg:w-1/2 mb-10 lg:mb-0">
-                    <h2 class="text-5xl font-bold mb-6 leading-tight">
-                        OfferBox運用代行<br>
-                        <span class="text-yellow-300">完全成果報酬型</span>サービス
-                    </h2>
-                    <p class="text-xl mb-8 opacity-90">
-                        新卒採用の成功率を最大化。<br>
-                        結果が出なければ費用は一切不要です。
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <div class="bg-white text-gray-800 px-8 py-4 rounded-lg font-semibold">
-                            <i class="fas fa-chart-line mr-2 text-blue-500"></i>採用成功率大幅UP
-                        </div>
-                        <div class="bg-white text-gray-800 px-8 py-4 rounded-lg font-semibold">
-                            <i class="fas fa-yen-sign mr-2 text-green-500"></i>コスト30%削減
-                        </div>
-                    </div>
-                </div>
-                <div class="lg:w-1/2">
-                    <img src="https://img.freepik.com/premium-photo/professional-meeting-welcome-employee-recruitment-after-agreement-office-hr-business-hiring-staff-with-hand-shake-collaboration-interview-workplace_590464-184170.jpg" 
-                         alt="プロフェッショナルな採用面接" class="rounded-lg shadow-2xl w-full">
-                </div>
-            </div>
-        </div>
-    </section>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="株式会社エージェントベスト">
+      <span class="mk">AB</span>
+      <span class="nm"><span class="full">株式会社エージェントベスト</span><small>OFFERBOX 運用代行</small></span>
+    </a>
+    <a href="https://timerex.net/s/r_matsuoka/6666f3b5/" target="_blank" rel="noopener" class="btn btn-primary cta-mini">無料で相談する</a>
+  </div>
+</header>
 
-    <!-- Problem Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-4xl font-bold text-gray-800 mb-4">新卒採用でこんな課題はありませんか？</h3>
-                <p class="text-xl text-gray-600">多くの企業が直面している採用の現実</p>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-red-50 p-8 rounded-lg card-shadow hover-scale">
-                    <div class="text-red-500 text-4xl mb-4">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <h4 class="text-xl font-semibold mb-3 text-gray-800">母集団形成の困難</h4>
-                    <p class="text-gray-600">ナビサイトだけでは優秀な学生にリーチできない</p>
-                </div>
-                <div class="bg-orange-50 p-8 rounded-lg card-shadow hover-scale">
-                    <div class="text-orange-500 text-4xl mb-4">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <h4 class="text-xl font-semibold mb-3 text-gray-800">運用リソース不足</h4>
-                    <p class="text-gray-600">OfferBoxの効果的な運用にマンパワーが不足</p>
-                </div>
-                <div class="bg-yellow-50 p-8 rounded-lg card-shadow hover-scale">
-                    <div class="text-yellow-600 text-4xl mb-4">
-                        <i class="fas fa-yen-sign"></i>
-                    </div>
-                    <h4 class="text-xl font-semibold mb-3 text-gray-800">採用コストの増大</h4>
-                    <p class="text-gray-600">人材紹介費用や広告費が年々増加</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<main id="top">
 
-    <!-- Solution Section -->
-    <section class="py-16 bg-blue-50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-4xl font-bold text-gray-800 mb-4">エージェントベストが解決します</h3>
-                <p class="text-xl text-gray-600">OfferBoxに特化した専門ノウハウで成果を最大化</p>
-            </div>
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <img src="https://thumbs.dreamstime.com/b/high-growth-chart-graph-success-data-growth-finance-concept-business-analytics-marketing-high-growth-chart-graph-success-155662150.jpg" 
-                         alt="成長チャート" class="rounded-lg shadow-lg w-full">
-                </div>
-                <div>
-                    <div class="space-y-6">
-                        <div class="flex items-start">
-                            <div class="bg-blue-500 text-white rounded-full p-3 mr-4 flex-shrink-0">
-                                <i class="fas fa-bullseye"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-semibold mb-2">完全成果報酬型</h4>
-                                <p class="text-gray-600">採用成功時のみ料金発生。リスクゼロでスタート可能</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="bg-green-500 text-white rounded-full p-3 mr-4 flex-shrink-0">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-semibold mb-2">専門チームによる運用</h4>
-                                <p class="text-gray-600">OfferBoxに精通したプロが貴社専属で運用サポート</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="bg-purple-500 text-white rounded-full p-3 mr-4 flex-shrink-0">
-                                <i class="fas fa-paper-plane"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-semibold mb-2">大量スカウト運用体制</h4>
-                                <p class="text-gray-600">日次でのスカウト実行と迅速なPDCAでアプローチ量を最大化。返信率・面談化を継続改善します。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="wrap hero-in">
+      <span class="hero-eyebrow">AI × RPO（採用代行）／ OfferBoxスカウト代行 ／ 完全成果報酬型</span>
+      <h1 class="hero-title">新卒採用の成功率を最大化。<br>成果が出なければ、<span class="hl">費用は0円</span>。</h1>
+      <p class="hero-lead">
+        <b style="color:var(--on-navy)">AIを活用したRPO（採用代行）</b>として、OfferBoxのスカウト運用を専門チームが貴社専属で代行。
+        ターゲット選定から面談化まで精度高く回し、母集団形成から内定まで伴走します。
+        <b style="color:var(--on-navy)">完全成果報酬型</b>だから、始めるリスクはありません。
+      </p>
+      <div class="hero-cta">
+        <a href="https://timerex.net/s/r_matsuoka/6666f3b5/" target="_blank" rel="noopener" class="btn btn-primary btn-lg">無料で相談する<span class="arw">→</span></a>
+        <a href="#service" class="btn btn-ghost btn-lg" style="border-color:var(--on-navy-line);color:var(--on-navy)">サービスを見る</a>
+        <span class="note">打ち合わせは1分で予約／相談無料</span>
+      </div>
 
-    <!-- OfferBox Strengths -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-4xl font-bold text-gray-800 mb-4">OfferBoxの圧倒的な強み</h3>
-                <p class="text-xl text-gray-600">なぜ多くの企業がOfferBoxを選ぶのか</p>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-graduation-cap text-3xl text-blue-600"></i>
-                    </div>
-                    <h4 class="text-2xl font-bold text-blue-600 mb-2">230,209人</h4>
-                    <p class="text-gray-600 font-semibold">2026年卒学生登録数</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-building text-3xl text-green-600"></i>
-                    </div>
-                    <h4 class="text-2xl font-bold text-green-600 mb-2">21,089社</h4>
-                    <p class="text-gray-600 font-semibold">累計企業登録数</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-yellow-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-envelope-open text-3xl text-yellow-600"></i>
-                    </div>
-                    <h4 class="text-2xl font-bold text-yellow-600 mb-2">82%</h4>
-                    <p class="text-gray-600 font-semibold">オファー開封率</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-check-circle text-3xl text-purple-600"></i>
-                    </div>
-                    <h4 class="text-2xl font-bold text-purple-600 mb-2">15-20%</h4>
-                    <p class="text-gray-600 font-semibold">オファー承認率</p>
-                </div>
-            </div>
-        </div>
-    </section>
+      <div class="hero-trust">
+        <div class="htile"><div class="n">20<em>万円</em></div><div class="l">成果報酬（新卒1名採用時）</div></div>
+        <div class="htile"><div class="n">0<em>円</em></div><div class="l">成果が出るまでの費用</div></div>
+        <div class="htile"><div class="n">23<em>万人+</em></div><div class="l">OfferBox学生登録数</div></div>
+        <div class="htile"><div class="n">82<em>%</em></div><div class="l">OfferBoxオファー開封率</div></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Service Features -->
-    <section class="py-16 bg-gray-100">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-4xl font-bold text-gray-800 mb-4">サービスの特徴</h3>
-                <p class="text-xl text-gray-600">エージェントベストならではの強み</p>
-            </div>
-            <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
-                <div>
-                    <h4 class="text-2xl font-bold mb-6 text-gray-800">3つの強み</h4>
-                    <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-lg card-shadow">
-                            <h5 class="text-xl font-semibold mb-3 text-blue-600">
-                                <i class="fas fa-trophy mr-2"></i>幅広い企業規模の採用成功実績
-                            </h5>
-                            <p class="text-gray-600">コンサルやハイクラス向けから中小企業まで、要件に応じた母集団形成と選考設計で採用成功に導いてきました。</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg card-shadow">
-                            <h5 class="text-xl font-semibold mb-3 text-green-600">
-                                <i class="fas fa-rocket mr-2"></i>主要・スタートアップ媒体の立ち上げ経験
-                            </h5>
-                            <p class="text-gray-600">大手求人媒体／スタートアップ向け媒体の両方で新規立ち上げを経験。媒体特性を理解した運用で成果を最短化します。</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg card-shadow">
-                            <h5 class="text-xl font-semibold mb-3 text-purple-600">
-                                <i class="fas fa-laptop-code mr-2"></i>高難易度ポジションに強い
-                            </h5>
-                            <p class="text-gray-600">特にIT・コンサル領域など難易度の高いポジションでのスカウト運用・選考伴走を得意としています。</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <img src="https://images.presentationgo.com/2025/04/team-collaboration-modern-office.jpg" 
-                         alt="チーム協力" class="rounded-lg shadow-lg w-full">
-                </div>
-            </div>
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="kick">01 ・ 採用の課題</span>
+        <h2>新卒採用で、こんな課題はありませんか？</h2>
+        <p>多くの企業が直面している、採用の現実。</p>
+      </div>
+      <div class="grid3">
+        <div class="pcard rv">
+          <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+          <h4>母集団形成が難しい</h4>
+          <p>ナビサイトへの掲載だけでは、狙いたい優秀な学生層になかなかリーチできない。</p>
         </div>
-    </section>
+        <div class="pcard rv">
+          <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h4>運用リソースが足りない</h4>
+          <p>OfferBoxを効果的に運用したいが、日々のスカウトに割けるマンパワーが不足している。</p>
+        </div>
+        <div class="pcard rv">
+          <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><path d="M17 7H9.5a3 3 0 000 6h5a3 3 0 010 6H6"/></svg></div>
+          <h4>採用コストが増え続ける</h4>
+          <p>人材紹介の成功報酬や広告費が年々増加し、採用単価が読みにくくなっている。</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Customer Testimonials -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-4xl font-bold text-gray-800 mb-4">導入企業の声</h3>
-                <p class="text-xl text-gray-600">実際にサービスをご利用いただいた企業様からの評価</p>
-            </div>
-            <div class="grid lg:grid-cols-2 gap-8">
-                <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-lg card-shadow hover-scale">
-                    <div class="flex items-center mb-4">
-                        <img src="https://career1.ca/wp-content/uploads/2022/10/pexels-pavel-danilyuk-5520289-scaled.jpg" 
-                             alt="オフィス" class="w-16 h-16 rounded-full object-cover mr-4">
-                        <div>
-                            <h5 class="font-semibold text-gray-800">コンサル（1000名規模）</h5>
-                            <p class="text-sm text-gray-600">人事責任者</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 italic">"ハイレベル人材の長期的な母集団形成まで踏み込んで支援いただき、戦略ポジションでの採用が継続的に実現できています。"</p>
-                </div>
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-lg card-shadow hover-scale">
-                    <div class="flex items-center mb-4">
-                        <img src="https://thumbs.dreamstime.com/b/moment-agreement-captured-as-two-professionals-shake-hands-symbolizing-partnership-business-successful-business-deal-377838788.jpg" 
-                             alt="握手" class="w-16 h-16 rounded-full object-cover mr-4">
-                        <div>
-                            <h5 class="font-semibold text-gray-800">上場企業 人事部長</h5>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 italic">"完全成果報酬なので社内稟議も通しやすく、スカウト運用の量と質が同時に向上。これまで出会えなかった層の学生と出会えました。"</p>
-                </div>
-            </div>
+  <!-- SOLUTION -->
+  <section class="band" id="service">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="kick">02 ・ 解決策</span>
+        <h2>AIと専門ノウハウで、成果まで伴走します。</h2>
+        <p>OfferBoxに特化した知見に、AI活用を掛け合わせて、スカウト運用を"代行"します。</p>
+      </div>
+      <div class="sol">
+        <div class="srow rv">
+          <div class="no">01</div>
+          <div><span class="tag">リスクゼロ</span><h4>完全成果報酬型</h4><p>採用が成功したときだけ料金が発生。始めるための初期費用・月額費用はかかりません。社内稟議も通しやすい料金設計です。</p></div>
         </div>
-    </section>
+        <div class="srow rv">
+          <div class="no">02</div>
+          <div><span class="tag" style="background:var(--accent-tint);color:var(--accent-ink)">AI活用</span><h4>AI × RPO で、精度を最大化</h4><p>採用プロセス全体（<b>AI × RPO＝採用代行</b>）にAIを組み込み、ターゲット選定とスカウト文面のパーソナライズを最適化。返信・面談化の傾向も分析し、"当てずっぽう"でない、精度の高い運用を実現します。</p></div>
+        </div>
+        <div class="srow rv">
+          <div class="no">03</div>
+          <div><h4>専門チームによる専属運用</h4><p>OfferBoxに精通したプロが、貴社専属でスカウト運用をサポート。ターゲット設計から文面作成、送信・返信対応まで代行します。</p></div>
+        </div>
+        <div class="srow rv">
+          <div class="no">04</div>
+          <div><h4>大量スカウト × 迅速なPDCA</h4><p>AIの分析をもとに日次でスカウトを実行し、返信率・面談化率を見ながら継続的に改善。アプローチの"量"と"質"を同時に引き上げます。</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Service Flow -->
-    <section class="py-16 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-4xl font-bold text-gray-800 mb-4">サービスフロー</h3>
-                <p class="text-xl text-gray-600">お申し込みから採用成功まで</p>
-            </div>
-            <div class="grid md:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="bg-blue-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
-                    <h4 class="text-xl font-semibold mb-3">お問い合わせ</h4>
-                    <p class="text-gray-600">公式サイトからお気軽にご相談ください</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
-                    <h4 class="text-xl font-semibold mb-3">ヒアリング</h4>
-                    <p class="text-gray-600">採用要件やターゲット人材を詳しくお聞きします</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-yellow-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
-                    <h4 class="text-xl font-semibold mb-3
-                    <h4 class="text-xl font-semibold mb-3">運用開始</h4>
-                    <p class="text-gray-600">専門チームがOfferBoxの運用を代行開始</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-purple-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">4</div>
-                    <h4 class="text-xl font-semibold mb-3">採用成功</h4>
-                    <p class="text-gray-600">内定承諾時に成果報酬をお支払いください</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- OFFERBOX STATS -->
+  <section id="offerbox">
+    <div class="wrap">
+      <div class="sec-head center rv">
+        <span class="kick">03 ・ OfferBoxの実力</span>
+        <h2>なぜ、OfferBoxなのか。</h2>
+      </div>
+      <div class="stat4">
+        <div class="scard rv"><div class="n">230,209<em>人</em></div><div class="l">2026年卒 学生登録数</div></div>
+        <div class="scard rv"><div class="n">21,089<em>社</em></div><div class="l">累計 企業登録数</div></div>
+        <div class="scard rv"><div class="n">82<em>%</em></div><div class="l">オファー開封率</div></div>
+        <div class="scard rv"><div class="n">15–20<em>%</em></div><div class="l">オファー承認率</div></div>
+      </div>
+      <p class="stat-note rv">※ 数値はOfferBoxの公表値（時点により変動します）。</p>
+    </div>
+  </section>
 
-    <!-- Pricing -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-4xl font-bold text-gray-800 mb-4">料金体系</h3>
-                <p class="text-xl text-gray-600">安心の完全成果報酬型</p>
-            </div>
-            <div class="max-w-4xl mx-auto">
-                <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8 rounded-lg card-shadow">
-                    <h4 class="text-3xl font-bold mb-6 text-center">新卒採用成功時のみ料金発生</h4>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div class="text-center">
-                            <div class="text-4xl font-bold mb-2">20万円</div>
-                            <p class="text-xl opacity-90">新卒1名採用成功時</p>
-                            <p class="text-sm opacity-75 mt-2">入社承諾時に請求</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-4xl font-bold mb-2">安心の返金規定</div>
-                            <div class="text-left space-y-2 mt-4">
-                                <p><span class="font-semibold">入社前退職：</span>100%返金</p>
-                                <p><span class="font-semibold">1ヵ月以内：</span>50%返金</p>
-                                <p><span class="font-semibold">3ヵ月以内：</span>30%返金</p>
-                                <p><span class="font-semibold">6ヵ月以内：</span>10%返金</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- STRENGTHS -->
+  <section class="band" id="why">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="kick">04 ・ 選ばれる理由</span>
+        <h2>エージェントベストならではの、3つの強み。</h2>
+      </div>
+      <div class="str">
+        <div class="scell rv"><div class="no">STRENGTH 01</div><h4>幅広い企業規模での採用成功実績</h4><p>コンサル・ハイクラス向けから中小企業まで、要件に応じた母集団形成と選考設計で、採用成功に導いてきました。</p></div>
+        <div class="scell rv"><div class="no">STRENGTH 02</div><h4>主要／スタートアップ媒体の立ち上げ経験</h4><p>大手求人媒体・スタートアップ向け媒体の双方で新規立ち上げを経験。媒体特性を理解した運用で、成果を最短化します。</p></div>
+        <div class="scell rv"><div class="no">STRENGTH 03</div><h4>高難易度ポジションに強い</h4><p>特にIT・コンサル領域など、難易度の高いポジションでのスカウト運用・選考伴走を得意としています。</p></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Contact -->
-    <section class="py-16 bg-gray-800 text-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-4xl font-bold mb-4">お問い合わせ</h3>
-                <p class="text-xl opacity-90">新卒採用でお困りの際は、お気軽にご相談ください</p>
-            </div>
-            <div class="max-w-4xl mx-auto">
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h4 class="text-2xl font-bold mb-6">株式会社エージェントベスト</h4>
-                        <div class="space-y-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-calendar mr-3 text-blue-400"></i>
-                                <span>設立：2020年4月1日</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-map-marker-alt mr-3 text-red-400"></i>
-                                <span>東京都港区六本木四丁目８番地７号<br>六本木嶋田ビル5階</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-certificate mr-3 text-yellow-400"></i>
-                                <span>有料職業紹介事業許可番号：13-ユ-316964</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-globe mr-3 text-green-400"></i>
-                                <a href="https://agent-best.net/" class="text-blue-300 hover:text-blue-200">https://agent-best.net/</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white bg-opacity-10 p-8 rounded-lg">
-                        <h5 class="text-xl font-semibold mb-4 text-center">今すぐ無料相談</h5>
-                        <p class="text-center mb-6 opacity-90">サービスについてのご質問や詳細な資料をご希望の方は、以下のお問い合わせボタンからご連絡ください。</p>
-                        <div class="text-center">
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfpZmfg8l2ffBwInnKJ8y9Q_o-UOpb_cngH30nBmgph2y5DVw/viewform?usp=dialog"
-                               target="_blank" rel="noopener"
-                               class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold inline-block transition duration-300">
-                                <i class="fas fa-envelope mr-2"></i>お問い合わせはこちら
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- VOICES -->
+  <section id="voices">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="kick">05 ・ 導入企業の声</span>
+        <h2>ご利用企業からの評価。</h2>
+      </div>
+      <div class="voices">
+        <div class="voice rv">
+          <div class="qm" aria-hidden="true">“</div>
+          <blockquote>新卒採用を何から始めればいいか分からない状態でしたが、母集団の作り方から一緒に設計してもらえました。AIを活用した運用で、限られた工数でも精度高くスカウトが回り、初めての新卒採用で内定承諾まで到達できました。</blockquote>
+          <div class="who"><span class="av" aria-hidden="true"></span><div><b>スタートアップ（シード〜アーリー）</b><span>代表 / 採用担当</span></div></div>
         </div>
-    </section>
+        <div class="voice rv">
+          <div class="qm" aria-hidden="true">“</div>
+          <blockquote>ハイレベル人材の長期的な母集団形成まで踏み込んで支援いただき、戦略ポジションでの採用が継続的に実現できています。</blockquote>
+          <div class="who"><span class="av" aria-hidden="true"></span><div><b>コンサルティング企業（1,000名規模）</b><span>人事責任者</span></div></div>
+        </div>
+        <div class="voice rv">
+          <div class="qm" aria-hidden="true">“</div>
+          <blockquote>完全成果報酬なので社内稟議も通しやすく、スカウト運用の量と質が同時に向上。これまで出会えなかった層の学生と出会えました。</blockquote>
+          <div class="who"><span class="av" aria-hidden="true"></span><div><b>上場企業</b><span>人事部長</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8">
-        <div class="container mx-auto px-6">
-            <div class="text-center">
-                <p class="text-gray-400 mb-4">デジタルディバイドを解消し、フラットな経済活動に貢献する</p>
-                <p class="text-gray-500">&copy; 2024 株式会社エージェントベスト. All rights reserved.</p>
-            </div>
+  <!-- PRICING -->
+  <section class="band" id="price">
+    <div class="wrap">
+      <div class="sec-head center rv">
+        <span class="kick">06 ・ 料金体系</span>
+        <h2>安心の、完全成果報酬型。</h2>
+      </div>
+      <div class="price rv">
+        <div class="price-top">
+          <div class="lbl">新卒採用 成功時のみ料金発生</div>
+          <div class="amt">20<small>万円 / 1名</small></div>
+          <div class="cap">入社承諾時にご請求。初期費用・月額費用は0円です。</div>
         </div>
-    </footer>
+        <div class="price-body">
+          <div class="price-col">
+            <h4><span class="dot"></span>料金に含まれるもの</h4>
+            <ul class="price-feat">
+              <li><span class="ck">✓</span><span>専門チームによるスカウト運用の代行</span></li>
+              <li><span class="ck">✓</span><span>ターゲット設計・スカウト文面の作成</span></li>
+              <li><span class="ck">✓</span><span>送信・返信対応と、継続的な改善（PDCA）</span></li>
+              <li><span class="ck">✓</span><span>初期費用・月額固定費は一切なし</span></li>
+            </ul>
+          </div>
+          <div class="price-col">
+            <h4><span class="dot"></span>安心の返金規定</h4>
+            <ul class="refund">
+              <li>入社前の退職<b>100%返金</b></li>
+              <li>入社1ヵ月以内<b>50%返金</b></li>
+              <li>入社3ヵ月以内<b>30%返金</b></li>
+              <li>入社6ヵ月以内<b>10%返金</b></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section id="flow">
+    <div class="wrap">
+      <div class="sec-head center rv">
+        <span class="kick">07 ・ ご利用の流れ</span>
+        <h2>ご相談から、採用成功まで。</h2>
+      </div>
+      <div class="flow">
+        <div class="fstep rv"><div class="no">STEP 01</div><h4>無料相談</h4><p>打ち合わせをオンラインで予約。採用のお悩みをお聞かせください。</p><span class="arw" aria-hidden="true">→</span></div>
+        <div class="fstep rv"><div class="no">STEP 02</div><h4>ヒアリング</h4><p>採用要件・ターゲット人材・スケジュールを詳しく整理します。</p><span class="arw" aria-hidden="true">→</span></div>
+        <div class="fstep rv"><div class="no">STEP 03</div><h4>運用開始</h4><p>専門チームがOfferBoxのスカウト運用を代行。日次で改善します。</p><span class="arw" aria-hidden="true">→</span></div>
+        <div class="fstep rv"><div class="no">STEP 04</div><h4>採用成功</h4><p>内定承諾時に、成果報酬をお支払いいただきます。</p><span class="arw" aria-hidden="true">→</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPANY -->
+  <section class="band" id="company">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="kick">08 ・ 運営会社</span>
+        <h2>株式会社エージェントベスト</h2>
+      </div>
+      <div class="company">
+        <div class="cinfo rv">
+          <div class="row"><span class="k">設立</span><span class="v">2020年4月1日</span></div>
+          <div class="row"><span class="k">所在地</span><span class="v">東京都港区六本木四丁目8番地7号 六本木嶋田ビル5階</span></div>
+          <div class="row"><span class="k">許可番号</span><span class="v">有料職業紹介事業 許可番号 13-ユ-316964</span></div>
+          <div class="row"><span class="k">公式サイト</span><span class="v"><a href="https://www.agent-best.net/" target="_blank" rel="noopener">www.agent-best.net</a></span></div>
+        </div>
+        <div class="voice rv" style="box-shadow:none">
+          <blockquote style="font-size:1.02rem">デジタルディバイドを解消し、<br>フラットな経済活動に貢献する。</blockquote>
+          <div class="who"><span class="av" aria-hidden="true"></span><div><b>ミドル・ハイクラス特化の転職・採用支援</b><span>IT・スタートアップ・M&amp;A・コンサル領域</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section id="entry">
+    <div class="wrap">
+      <div class="final rv">
+        <span class="lbl">Get Started ・ 相談無料</span>
+        <h2>まずは、打ち合わせから。</h2>
+        <p>新卒採用でお困りの際は、お気軽にご相談ください。完全成果報酬型なので、始めるリスクはありません。</p>
+        <div class="hero-cta">
+          <a href="https://timerex.net/s/r_matsuoka/6666f3b5/" target="_blank" rel="noopener" class="btn btn-primary btn-lg">無料で相談を予約する<span class="arw">→</span></a>
+          <span class="note">オンライン・1分で予約完了</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <nav class="ft-links">
+      <a href="https://www.agent-best.net/" target="_blank" rel="noopener">エージェントベスト公式サイト &#8599;</a>
+      <a href="https://timerex.net/s/r_matsuoka/6666f3b5/" target="_blank" rel="noopener">無料で相談する &#8599;</a>
+    </nav>
+    <p class="ft-tag">デジタルディバイドを解消し、フラットな経済活動に貢献する。<br>© 株式会社エージェントベスト. OfferBox運用代行サービス。</p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var els=document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(en){
+      en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e,i){e.style.transitionDelay=(Math.min(i%3,2)*70)+'ms';io.observe(e);});
+  })();
+</script>
 </body>
 </html>
-
