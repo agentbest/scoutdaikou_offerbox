@@ -19,28 +19,13 @@
     --maxw:1080px;--radius:16px;
     --shadow:0 1px 2px rgba(14,27,48,.05),0 16px 38px -20px rgba(14,27,48,.26);
   }
-  @media (prefers-color-scheme:dark){
-    :root{
-      --paper:#070D18;--surface:#0F1826;--surface-2:#0C1420;--ink:#E9EEF6;--ink-soft:#A2B0C6;--ink-faint:#6F7E95;
-      --line:#1D2A3D;--line-strong:#2A3B54;--accent:#4B84F5;--accent-strong:#6699FF;--accent-ink:#7EA6FF;--accent-tint:#12203A;
-      --success:#2BC073;--success-ink:#4BD98D;--success-tint:#0E2419;--navy:#050B15;--navy-2:#0A1524;
-      --on-navy:#EAF0F8;--on-navy-soft:#93A6C0;--on-navy-line:#182740;
-      --shadow:0 1px 2px rgba(0,0,0,.4),0 20px 44px -22px rgba(0,0,0,.72);
-    }
-  }
+  /* 白ベースに統一（デザイン上の意図でダークモードは無効）。ヒーロー/CTAのネイビーは --navy トークンで常時維持 */
   :root[data-theme="light"]{
     --paper:#F3F6FB;--surface:#FFFFFF;--surface-2:#E9EFF8;--ink:#0E1B30;--ink-soft:#48586F;--ink-faint:#8291A5;
     --line:#E0E8F2;--line-strong:#CAD6E5;--accent:#2563EB;--accent-strong:#1D4FD0;--accent-ink:#1A46B8;--accent-tint:#E4ECFE;
     --success:#12A150;--success-ink:#0B7A3B;--success-tint:#DCF3E6;--navy:#0B1A32;--on-navy:#EAF0F8;--on-navy-soft:#9CB0CB;--on-navy-line:#20324D;
     --shadow:0 1px 2px rgba(14,27,48,.05),0 16px 38px -20px rgba(14,27,48,.26);
   }
-  :root[data-theme="dark"]{
-    --paper:#070D18;--surface:#0F1826;--surface-2:#0C1420;--ink:#E9EEF6;--ink-soft:#A2B0C6;--ink-faint:#6F7E95;
-    --line:#1D2A3D;--line-strong:#2A3B54;--accent:#4B84F5;--accent-strong:#6699FF;--accent-ink:#7EA6FF;--accent-tint:#12203A;
-    --success:#2BC073;--success-ink:#4BD98D;--success-tint:#0E2419;--navy:#050B15;--on-navy:#EAF0F8;--on-navy-soft:#93A6C0;--on-navy-line:#182740;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 20px 44px -22px rgba(0,0,0,.72);
-  }
-
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.75;
