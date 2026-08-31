@@ -44,6 +44,7 @@
 ### 共通の型（新規B2B LPはこれをコピーする）
 
 - `index.html` **1ファイル完結**。CSS・JS・アイコン（インラインSVG）をすべて内包し、**外部CDNを一切読まない**。
+- ロゴとファビコンだけは画像ファイル（同ディレクトリの `logo.png` / `favicon.ico` / `icon-192.png` / `apple-touch-icon.png`）を参照する。原本は `C:\Users\user\ロゴ素材\`（生成スクリプト `make_assets.py` 付き）。
 - CSS変数トークン（`--paper` / `--ink` / `--accent` / `--navy` 等）＋ **ネイビーのヒーロー＆最終CTA**。アクセント色だけ差し替える。
 - `.rv` クラス＋IntersectionObserverでスクロール表示。JS無効時の保険に `<noscript>` で `.rv{opacity:1}`。
 - canonical・OGP・favicon（ABマークのSVG data URI）・robots を自ドメインで設定。
