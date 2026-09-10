@@ -176,7 +176,8 @@
   .refund li{display:flex;justify-content:space-between;align-items:center;font-size:.94rem;color:var(--ink-soft);
     padding-bottom:10px;border-bottom:1px dashed var(--line-strong)}
   .refund li:last-child{border-bottom:0;padding-bottom:0}
-  .refund li b{font-family:var(--mono);color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums}
+  .refund li b{font-family:var(--mono);color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;margin-left:12px}
+  .refund-note{margin-top:12px;font-size:.8rem;color:var(--ink-faint)}
   .price-feat{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
   .price-feat li{display:flex;gap:11px;font-size:.94rem;color:var(--ink-soft)}
   .price-feat li .ck{width:22px;height:22px;border-radius:50%;background:var(--success);color:#fff;flex:none;display:grid;place-items:center;font-size:.72rem;font-weight:800}
@@ -194,6 +195,27 @@
   @media (max-width:440px){.flow{grid-template-columns:1fr}}
 
   /* company */
+  .profile{display:grid;grid-template-columns:.8fr 1.2fr;gap:0;background:var(--surface);border:1px solid var(--line);
+    border-radius:20px;overflow:hidden;box-shadow:var(--shadow);max-width:920px;margin:0 auto}
+  .profile .left{background:var(--navy);color:var(--on-navy);padding:38px 30px;text-align:center}
+  .profile .left .av{width:74px;height:74px;border-radius:20px;margin:0 auto 16px;
+    background:linear-gradient(145deg,var(--accent),#5FB8C9);display:grid;place-items:center;color:#fff;font-weight:900;font-size:1.3rem}
+  .profile .left b{font-size:1.3rem;font-weight:900;display:block}
+  .profile .left span{font-size:.84rem;color:var(--on-navy-soft)}
+  .profile .right{padding:34px 32px}
+  .profile h4{font-size:.94rem;font-weight:800;margin-bottom:12px}
+  .profile .quote{margin-top:22px;padding:16px 18px;background:var(--accent-tint);border-radius:12px;color:var(--accent-ink);
+    font-size:.92rem;font-weight:700}
+  .profile .profile-link{display:inline-block;margin-top:16px;font-size:.9rem;font-weight:700;color:var(--accent-ink)}
+  .profile .profile-link:hover{text-decoration:underline}
+  .ilist{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .ilist li{display:flex;gap:10px;font-size:.94rem;color:var(--ink-soft)}
+  .ilist li .ck{width:20px;height:20px;border-radius:50%;background:var(--success-tint);color:var(--success-ink);
+    flex:none;display:grid;place-items:center;font-size:.7rem;font-weight:800;margin-top:3px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-weight:700;font-size:.86rem;color:var(--ink-soft)}
+  @media (max-width:760px){.profile{grid-template-columns:1fr}}
+
   .company{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;max-width:960px;margin:0 auto}
   .cinfo{display:flex;flex-direction:column;gap:14px}
   .cinfo .row{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;font-size:.95rem}
@@ -304,7 +326,7 @@
       <div class="hero-trust">
         <div class="htile"><div class="n">20<em>万円</em></div><div class="l">成果報酬（新卒1名採用時）</div></div>
         <div class="htile"><div class="n">0<em>円</em></div><div class="l">成果が出るまでの費用</div></div>
-        <div class="htile"><div class="n">23<em>万人+</em></div><div class="l">OfferBox学生登録数</div></div>
+        <div class="htile"><div class="n">25<em>万人+</em></div><div class="l">OfferBox学生登録数（2027年卒）</div></div>
         <div class="htile"><div class="n">82<em>%</em></div><div class="l">OfferBoxオファー開封率</div></div>
       </div>
     </div>
@@ -375,12 +397,12 @@
         <h2>なぜ、OfferBoxなのか。</h2>
       </div>
       <div class="stat4">
-        <div class="scard rv"><div class="n">230,209<em>人</em></div><div class="l">2026年卒 学生登録数</div></div>
-        <div class="scard rv"><div class="n">21,089<em>社</em></div><div class="l">累計 企業登録数</div></div>
+        <div class="scard rv"><div class="n">25<em>万人+</em></div><div class="l">2027年卒 学生登録数</div></div>
+        <div class="scard rv"><div class="n">23,106<em>社</em></div><div class="l">累計 企業登録数</div></div>
         <div class="scard rv"><div class="n">82<em>%</em></div><div class="l">オファー開封率</div></div>
         <div class="scard rv"><div class="n">15–20<em>%</em></div><div class="l">オファー承認率</div></div>
       </div>
-      <p class="stat-note rv">※ 数値はOfferBoxの公表値（時点により変動します）。</p>
+      <p class="stat-note rv">※ 学生登録数・企業登録数はOfferBox公式サイト掲載の2027年卒利用実績（2026年7月時点）。開封率・承認率はOfferBoxの公表値（時点により変動します）。</p>
     </div>
   </section>
 
@@ -452,11 +474,9 @@
           <div class="price-col">
             <h4><span class="dot"></span>安心の返金規定</h4>
             <ul class="refund">
-              <li>入社前の退職<b>100%返金</b></li>
-              <li>入社1ヵ月以内<b>50%返金</b></li>
-              <li>入社3ヵ月以内<b>30%返金</b></li>
-              <li>入社6ヵ月以内<b>10%返金</b></li>
+              <li>内定承諾後、入社前に退職（辞退）された場合<b>100%返金</b></li>
             </ul>
+            <p class="refund-note">※ 入社後の退職は返金の対象外です。詳細は契約時にご案内します。</p>
           </div>
         </div>
       </div>
@@ -479,23 +499,60 @@
     </div>
   </section>
 
+  <!-- REPRESENTATIVE -->
+  <section id="representative">
+    <div class="wrap">
+      <div class="sec-head center rv">
+        <span class="kick">08 ・ 代表紹介</span>
+        <h2>運用の設計は、代表が直接見ています。</h2>
+      </div>
+      <div class="profile rv">
+        <div class="left">
+          <div class="av" aria-hidden="true">AB</div>
+          <b>松岡 良次</b>
+          <span>株式会社エージェントベスト 代表取締役</span>
+        </div>
+        <div class="right">
+          <h4>経歴</h4>
+          <ul class="ilist" style="margin-top:0">
+            <li><span class="ck">✓</span><span>法政大学卒業、神奈川県出身</span></li>
+            <li><span class="ck">✓</span><span>人材領域で10年以上のビジネス経験</span></li>
+            <li><span class="ck">✓</span><span>WEB広告ベンチャー・大手人材会社・人材系スタートアップにて、IT・スタートアップ・メガベンチャー企業の採用支援に従事</span></li>
+            <li><span class="ck">✓</span><span>2020年4月に株式会社エージェントベストを創業</span></li>
+          </ul>
+          <h4 style="margin-top:22px">専門領域</h4>
+          <div class="chips">
+            <span class="chip">IT・WEB業界</span>
+            <span class="chip">スタートアップ支援</span>
+            <span class="chip">中途・新卒採用</span>
+            <span class="chip">コンサル・M&amp;A領域</span>
+          </div>
+          <p class="quote">力のある人が、力を発揮できる企業に集まる。その流れを一本ずつ確かに通していくことが、結果として日本全体の引力になると信じています。</p>
+          <a class="profile-link" href="https://www.agent-best.net/profile/" target="_blank" rel="noopener">代表プロフィールを見る &#8599;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- COMPANY -->
   <section class="band" id="company">
     <div class="wrap">
       <div class="sec-head rv">
-        <span class="kick">08 ・ 運営会社</span>
+        <span class="kick">09 ・ 運営会社</span>
         <h2>株式会社エージェントベスト</h2>
       </div>
       <div class="company">
         <div class="cinfo rv">
+          <div class="row"><span class="k">代表者</span><span class="v">代表取締役　松岡 良次</span></div>
           <div class="row"><span class="k">設立</span><span class="v">2020年4月1日</span></div>
-          <div class="row"><span class="k">所在地</span><span class="v">東京都港区六本木四丁目8番地7号 六本木嶋田ビル5階</span></div>
+          <div class="row"><span class="k">所在地</span><span class="v">東京都港区六本木4-8-7　嶋田ビル5階</span></div>
+          <div class="row"><span class="k">事業内容</span><span class="v">有料職業紹介事業／採用支援（RPO・スカウト代行）／採用代行・RPOマッチングサイト「<a href="https://eraberusaiyodaiko.com/" target="_blank" rel="noopener">エラベル</a>」／キャリアメディア・求人サイトの運営</span></div>
           <div class="row"><span class="k">許可番号</span><span class="v">有料職業紹介事業 許可番号 13-ユ-316964</span></div>
-          <div class="row"><span class="k">公式サイト</span><span class="v"><a href="https://www.agent-best.net/" target="_blank" rel="noopener">www.agent-best.net</a></span></div>
+          <div class="row"><span class="k">公式サイト</span><span class="v"><a href="https://www.agent-best.net/" target="_blank" rel="noopener">www.agent-best.net</a>　／　<a href="https://www.agent-best.net/company/" target="_blank" rel="noopener">会社情報</a></span></div>
         </div>
         <div class="voice rv" style="box-shadow:none">
-          <blockquote style="font-size:1.02rem">デジタルディバイドを解消し、<br>フラットな経済活動に貢献する。</blockquote>
-          <div class="who"><span class="av" aria-hidden="true"></span><div><b>ミドル・ハイクラス特化の転職・採用支援</b><span>IT・スタートアップ・M&amp;A・コンサル領域</span></div></div>
+          <blockquote style="font-size:1.02rem">日本に、<br>磁力を生む。</blockquote>
+          <div class="who"><span class="av" aria-hidden="true"></span><div><b>MISSION</b><span>力のある人が、力を発揮できる企業に集まる流れを、一人ずつ、一社ずつ。</span></div></div>
         </div>
       </div>
     </div>
@@ -567,9 +624,10 @@
       <a href="https://scout.agent-best.net/" target="_blank" rel="noopener">スカウト代行サービス &#8599;</a>
       <a href="https://green.agent-best.net/" target="_blank" rel="noopener">Green運用代行 &#8599;</a>
       <a href="https://infra.agent-best.net/" target="_blank" rel="noopener">Infra長期インターン採用代理店 &#8599;</a>
+      <a href="https://eraberusaiyodaiko.com/" target="_blank" rel="noopener">採用代行マッチング「エラベル」 &#8599;</a>
     </nav>
-    <p class="ft-tag">デジタルディバイドを解消し、フラットな経済活動に貢献する。<br>
-      東京都港区六本木四丁目8番地7号 六本木嶋田ビル5階／有料職業紹介事業 許可番号 13-ユ-316964<br>
+    <p class="ft-tag">日本に、磁力を生む。<br>
+      東京都港区六本木4-8-7 嶋田ビル5階／有料職業紹介事業 許可番号 13-ユ-316964<br>
       © 株式会社エージェントベスト. OfferBox運用代行サービス。</p>
   </div>
 </footer>
