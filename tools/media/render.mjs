@@ -1,0 +1,261 @@
+// tools/media/render.mjs … 「地方採用ラボ」の静的HTMLを組み立てる。
+//
+// ⚠ media/ 配下はすべて生成物。直接編集しない（node tools/media/generate.mjs で作り直す）。
+// ⚠ 見た目はLP（ルートの index.html）と同じトークン（ネイビー×ティール・白ベース）に揃えている。
+//    LP側の配色を変えたときは、ここの CSS も合わせること。
+// ⚠ 外部CDNは読まない（LPと同じ方針）。CSSだけは2,000ページで重複させないため
+//    /media/assets/media.css に切り出している。
+
+import { esc } from './common.mjs';
+
+export const SITE = 'https://scoutdaikou-offerbox.agent-best.net';
+export const MEDIA_NAME = '地方採用ラボ';
+export const MEDIA_TAGLINE = '地方の中小・中堅企業のための、新卒採用ノウハウメディア';
+export const COMPANY = '株式会社エージェントベスト';
+export const CTA_URL = '/#entry';
+
+/* ---------------- CSS ---------------- */
+export const CSS = `/* /media/assets/media.css … 生成物。tools/media/render.mjs の CSS 定数が原本 */
+:root{
+  --paper:#F3F6FB;--surface:#FFFFFF;--surface-2:#E9EFF8;
+  --ink:#0E1B30;--ink-soft:#48586F;--ink-faint:#8291A5;
+  --line:#E0E8F2;--line-strong:#CAD6E5;
+  --accent:#0D7E93;--accent-strong:#0A6577;--accent-ink:#0B5666;--accent-tint:#DAEEF1;
+  --success:#12A150;--success-ink:#0B7A3B;--success-tint:#DCF3E6;
+  --navy:#0B1A32;--on-navy:#EAF0F8;--on-navy-soft:#9CB0CB;--on-navy-line:#20324D;
+  --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",YuGothic,"Noto Sans JP","Segoe UI",sans-serif;
+  --mono:"SFMono-Regular","SF Mono","Cascadia Code",Consolas,"Roboto Mono",monospace;
+  --maxw:1080px;--radius:14px;
+  --shadow:0 1px 2px rgba(14,27,48,.05),0 16px 38px -20px rgba(14,27,48,.26);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.85;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+img{max-width:100%;height:auto}
+a{color:var(--accent-ink);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+.narrow{max-width:760px}
+
+/* header */
+header.mnav{position:sticky;top:0;z-index:50;background:rgba(243,246,251,.92);backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--line)}
+.mnav-in{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:62px;padding:9px 0;flex-wrap:wrap}
+.mbrand{display:flex;align-items:center;gap:11px;font-weight:800;color:var(--ink)}
+.mbrand:hover{text-decoration:none}
+.mbrand img{height:30px;width:auto;display:block;flex:none}
+.mbrand .nm{font-size:.98rem;line-height:1.25;padding-left:11px;border-left:1px solid var(--line-strong)}
+.mbrand .nm small{display:block;font-size:.6rem;letter-spacing:.1em;color:var(--ink-faint);font-weight:700;font-family:var(--mono)}
+.mnav-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mnav-links a{color:var(--ink-soft);font-size:.86rem;font-weight:700;padding:6px 10px;border-radius:8px}
+.mnav-links a:hover{background:var(--surface-2);color:var(--accent-ink);text-decoration:none}
+.mnav-links a.cta{background:var(--accent);color:#fff}
+.mnav-links a.cta:hover{background:var(--accent-strong);color:#fff}
+
+/* hero */
+.mhero{background:var(--navy);color:var(--on-navy);border-bottom:1px solid var(--on-navy-line)}
+.mhero-in{padding:52px 0 46px}
+.mhero .eyebrow{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;font-weight:700;
+  background:rgba(255,255,255,.08);border:1px solid var(--on-navy-line);padding:6px 13px;border-radius:999px}
+.mhero h1{font-size:clamp(1.7rem,4.4vw,2.6rem);font-weight:900;line-height:1.35;margin:18px 0 0}
+.mhero p{margin:16px 0 0;color:var(--on-navy-soft);max-width:42em}
+.mhero .counts{margin:22px 0 0;display:flex;gap:26px;flex-wrap:wrap;font-family:var(--mono);font-size:.82rem;color:var(--on-navy-soft)}
+.mhero .counts b{color:#fff;font-size:1.3rem;font-weight:800;margin-right:4px}
+
+/* breadcrumb */
+.crumb{font-size:.78rem;color:var(--ink-faint);padding:16px 0 0}
+.crumb ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.crumb li:not(:last-child)::after{content:"›";margin-left:6px;color:var(--line-strong)}
+.crumb a{color:var(--ink-soft)}
+
+/* sections */
+main{padding:0 0 10px}
+.sec{padding:44px 0}
+.sec-head h2{font-size:1.32rem;font-weight:800;letter-spacing:.01em}
+.sec-head p{margin:8px 0 0;color:var(--ink-soft);font-size:.92rem}
+.ghead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--accent);padding-bottom:10px;margin-bottom:20px}
+.ghead h2{font-size:1.25rem;font-weight:800}
+.ghead .n{font-family:var(--mono);font-size:.78rem;color:var(--ink-faint)}
+
+/* hub cards */
+.hubgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
+.hubcard{display:block;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:13px 15px;
+  color:var(--ink);transition:border-color .15s ease,transform .15s ease}
+.hubcard:hover{border-color:var(--accent);transform:translateY(-1px);text-decoration:none}
+.hubcard .t{font-weight:700;font-size:.95rem;line-height:1.5}
+.hubcard .c{font-family:var(--mono);font-size:.72rem;color:var(--ink-faint);margin-top:4px}
+.blocklabel{font-size:.8rem;font-weight:800;color:var(--accent-ink);margin:20px 0 9px;letter-spacing:.04em}
+.blocklabel:first-child{margin-top:0}
+
+/* article list */
+.alist{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.acard{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:15px 17px}
+.acard a.t{font-weight:700;font-size:1rem;line-height:1.6;color:var(--ink)}
+.acard a.t:hover{color:var(--accent-ink)}
+.acard p{margin:6px 0 0;color:var(--ink-soft);font-size:.87rem;line-height:1.75}
+.acard .meta{margin-top:8px;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint);display:flex;gap:10px;flex-wrap:wrap}
+
+/* article body */
+article.post{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:34px 38px;box-shadow:var(--shadow)}
+article.post h1{font-size:clamp(1.45rem,3.4vw,2.05rem);font-weight:900;line-height:1.45;letter-spacing:.005em}
+.postmeta{margin-top:14px;padding-bottom:18px;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:.72rem;color:var(--ink-faint);display:flex;gap:12px;flex-wrap:wrap}
+.lead{margin-top:20px;font-size:1.02rem;color:var(--ink-soft);background:var(--surface-2);border-radius:10px;padding:16px 18px}
+article.post h2{font-size:1.18rem;font-weight:800;margin:34px 0 0;padding-left:12px;border-left:4px solid var(--accent);line-height:1.55}
+article.post p{margin:13px 0 0;font-size:.97rem}
+.mlist{margin:14px 0 0;padding-left:0;list-style:none}
+.mlist li{position:relative;padding-left:22px;margin-top:7px;font-size:.95rem;color:var(--ink)}
+.mlist li::before{content:"";position:absolute;left:4px;top:.72em;width:7px;height:7px;border-radius:2px;background:var(--accent)}
+.tags{margin-top:26px;display:flex;gap:7px;flex-wrap:wrap}
+.tags span{font-size:.74rem;color:var(--accent-ink);background:var(--accent-tint);border-radius:999px;padding:4px 11px;font-weight:700}
+.note{margin-top:26px;font-size:.8rem;color:var(--ink-faint);line-height:1.8;border-top:1px solid var(--line);padding-top:16px}
+
+/* CTA */
+.cta{margin:30px 0 0;background:var(--navy);color:var(--on-navy);border-radius:var(--radius);padding:28px 30px}
+.cta .lbl{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;color:var(--on-navy-soft);font-weight:700}
+.cta h3{font-size:1.18rem;font-weight:800;margin:9px 0 0;color:#fff;line-height:1.5}
+.cta h3 em{font-style:normal;color:#3BD07A}
+.cta p{margin:12px 0 0;color:var(--on-navy-soft);font-size:.9rem}
+.cta .btn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:var(--accent);color:#fff;font-weight:800;
+  font-size:.93rem;padding:13px 26px;border-radius:10px}
+.cta .btn:hover{background:var(--accent-strong);text-decoration:none}
+.cta .fine{margin-top:12px;font-size:.76rem;color:var(--on-navy-soft)}
+
+/* related */
+.related{margin-top:34px}
+.related h2{font-size:1.05rem;font-weight:800;margin-bottom:12px}
+
+/* search */
+.searchbox{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+.searchbox input{flex:1;min-width:220px;font:inherit;font-size:.95rem;padding:12px 14px;border:1px solid var(--line-strong);
+  border-radius:10px;background:var(--surface);color:var(--ink)}
+.searchbox input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.searchbox select{font:inherit;font-size:.92rem;padding:12px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);color:var(--ink)}
+#shits{font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);margin-bottom:12px}
+
+/* footer */
+footer.mft{background:var(--navy);color:var(--on-navy-soft);margin-top:44px;padding:38px 0 34px;font-size:.84rem}
+footer.mft a{color:var(--on-navy)}
+.ftnav{display:flex;gap:8px 20px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--on-navy-line)}
+.ftgroups{display:flex;gap:8px 18px;flex-wrap:wrap;padding:16px 0;font-size:.82rem}
+.fttag{margin-top:14px;line-height:1.9;font-size:.78rem}
+
+@media (max-width:720px){
+  article.post{padding:24px 20px}
+  .mhero-in{padding:38px 0 34px}
+  .sec{padding:32px 0}
+}
+`;
+
+/* ---------------- 共通レイアウト ---------------- */
+
+// [グループkey, ヘッダーの短い表記, フッターの正式名]
+const GROUP_NAV = [
+  ['area', 'エリアから', 'エリアから探す'],
+  ['industry', '業種から', '業種から探す'],
+  ['issue', '採用の課題から', '採用の課題から探す'],
+  ['dr', 'スカウト採用', 'ダイレクトリクルーティング・OfferBox'],
+  ['theme', '地方採用のテーマ', '地方採用のテーマ'],
+];
+
+function head({ title, desc, canonical, extraJsonLd = [] }) {
+  const ld = extraJsonLd.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join('');
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<link rel="canonical" href="${canonical}">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0B1A32">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="${esc(MEDIA_NAME)}｜${esc(COMPANY)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/media/assets/media.css">
+${ld}
+</head>
+<body>
+<header class="mnav"><div class="wrap mnav-in">
+  <a class="mbrand" href="/media/">
+    <img src="/logo.png" alt="${esc(COMPANY)}" width="508" height="120">
+    <span class="nm">${esc(MEDIA_NAME)}<small>CHIHO SAIYO LAB</small></span>
+  </a>
+  <nav class="mnav-links">
+    ${GROUP_NAV.map(([k, l]) => `<a href="/media/category/${k}/">${esc(l)}</a>`).join('')}
+    <a href="/media/search/">記事を探す</a>
+    <a class="cta" href="${CTA_URL}">無料で相談する</a>
+  </nav>
+</div></header>
+`;
+}
+
+function foot() {
+  return `<footer class="mft"><div class="wrap">
+  <nav class="ftnav">
+    <a href="/media/">${esc(MEDIA_NAME)} トップ</a>
+    <a href="/media/search/">記事を探す</a>
+    <a href="/">OfferBox運用代行（完全成果報酬型）</a>
+    <a href="${CTA_URL}">お問い合わせ</a>
+  </nav>
+  <div class="ftgroups">
+    ${GROUP_NAV.map(([k, , full]) => `<a href="/media/category/${k}/">${esc(full)}</a>`).join('')}
+  </div>
+  <div class="ftgroups">
+    <a href="https://www.agent-best.net/" target="_blank" rel="noopener">エージェントベスト公式サイト ↗</a>
+    <a href="https://scout.agent-best.net/" target="_blank" rel="noopener">スカウト代行サービス ↗</a>
+    <a href="https://green.agent-best.net/" target="_blank" rel="noopener">Green運用代行 ↗</a>
+    <a href="https://infra.agent-best.net/" target="_blank" rel="noopener">Infra長期インターン採用代理店 ↗</a>
+    <a href="https://eraberusaiyodaiko.com/" target="_blank" rel="noopener">採用代行マッチング「エラベル」 ↗</a>
+  </div>
+  <p class="fttag">${esc(MEDIA_TAGLINE)}<br>
+  ${esc(COMPANY)}／東京都港区六本木4-8-7 嶋田ビル5階／有料職業紹介事業 許可番号 13-ユ-316964<br>
+  © ${esc(COMPANY)}</p>
+</div></footer>
+</body>
+</html>
+`;
+}
+
+export function page(opts, body) {
+  return head(opts) + body + foot();
+}
+
+export function crumb(items) {
+  const li = items.map((it, i) =>
+    i === items.length - 1
+      ? `<li>${esc(it.name)}</li>`
+      : `<li><a href="${it.url}">${esc(it.name)}</a></li>`).join('');
+  return `<div class="wrap crumb"><ol>${li}</ol></div>`;
+}
+
+export function breadcrumbLd(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem', position: i + 1, name: it.name,
+      ...(it.url ? { item: SITE + it.url } : {}),
+    })),
+  };
+}
+
+/** 記事末尾の相談導線。文言は1か所（ここ）にまとめてある */
+export function ctaBlock() {
+  return `<aside class="cta">
+  <span class="lbl">OfferBox運用代行 ・ 完全成果報酬型</span>
+  <h3>新卒採用のスカウト運用を、<em>成果が出るまで0円</em>で代行します。</h3>
+  <p>ターゲットの設計から文面の作成、送信、日程調整までを専門チームが代行します。費用が発生するのは入社の承諾に至ったときだけ（1名あたり20万円）なので、始める段階での持ち出しはありません。地方の中小・中堅企業からのご相談も承っています。</p>
+  <a class="btn" href="${CTA_URL}">無料で相談する →</a>
+  <p class="fine">フォームからのお問い合わせのみ。営業のお電話はいたしません。</p>
+</aside>`;
+}
