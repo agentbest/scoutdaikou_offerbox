@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>記事を探す｜地方採用ラボ</title>
+<meta name="description" content="地方採用ラボの記事をキーワードとカテゴリで絞り込めます。">
+<link rel="canonical" href="https://scoutdaikou-offerbox.agent-best.net/media/search/">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0B1A32">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="地方採用ラボ｜株式会社エージェントベスト">
+<meta property="og:title" content="記事を探す｜地方採用ラボ">
+<meta property="og:description" content="地方採用ラボの記事をキーワードとカテゴリで絞り込めます。">
+<meta property="og:url" content="https://scoutdaikou-offerbox.agent-best.net/media/search/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/media/assets/media.css">
+
+</head>
+<body>
+<header class="mnav"><div class="wrap mnav-in">
+  <a class="mbrand" href="/media/">
+    <img src="/logo.png" alt="株式会社エージェントベスト" width="508" height="120">
+    <span class="nm">地方採用ラボ<small>CHIHO SAIYO LAB</small></span>
+  </a>
+  <nav class="mnav-links">
+    <a href="/media/category/area/">エリアから</a><a href="/media/category/industry/">業種から</a><a href="/media/category/issue/">採用の課題から</a><a href="/media/category/dr/">スカウト採用</a><a href="/media/category/theme/">地方採用のテーマ</a>
+    <a href="/media/search/">記事を探す</a>
+    <a class="cta" href="/#entry">無料で相談する</a>
+  </nav>
+</div></header>
+<div class="wrap crumb"><ol><li><a href="/media/">地方採用ラボ</a></li><li>記事を探す</li></ol></div>
+<main><div class="wrap sec">
+  <div class="sec-head" style="margin-bottom:18px"><h2 style="font-size:1.6rem">記事を探す</h2>
+    <p>タイトル・説明・カテゴリ・タグから絞り込めます。</p></div>
+  <div class="searchbox">
+    <input id="sq" type="search" placeholder="例：母集団形成、スカウト文面、北海道" autocomplete="off">
+    <select id="sg"><option value="">すべてのカテゴリ</option><option value="area">エリアから探す</option><option value="industry">業種から探す</option><option value="issue">採用の課題から探す</option><option value="dr">ダイレクトリクルーティング・OfferBox</option><option value="theme">地方採用のテーマ</option></select>
+  </div>
+  <div id="shits">読み込み中…</div>
+  <ul class="alist" id="sres"></ul>
+</div></main>
+<script>
+(function(){
+  var q=document.getElementById('sq'),g=document.getElementById('sg'),
+      hits=document.getElementById('shits'),res=document.getElementById('sres'),items=null;
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function render(){
+    if(!items){return;}
+    var kw=q.value.trim().toLowerCase(), gk=g.value;
+    var out=items.filter(function(it){
+      if(gk && it[4]!==gk) return false;
+      if(!kw) return true;
+      return (it[1]+' '+it[2]+' '+it[3]+' '+it[5]).toLowerCase().indexOf(kw)>=0;
+    });
+    hits.textContent=out.length+'件';
+    res.innerHTML=out.slice(0,80).map(function(it){
+      return '<li class="acard"><a class="t" href="/media/'+it[0]+'/">'+esc(it[1])+'</a><p>'+esc(it[2])+'</p>'+
+             '<div class="meta"><span>'+esc(it[3])+'</span></div></li>';
+    }).join('')+(out.length>80?'<li class="acard"><p>他 '+(out.length-80)+' 件。キーワードで絞り込んでください。</p></li>':'');
+  }
+  fetch('/media/search.json').then(function(r){return r.json();}).then(function(d){
+    items=d.items; hits.textContent=items.length+'件'; render();
+  }).catch(function(){ hits.textContent='検索インデックスを読み込めませんでした。'; });
+  q.addEventListener('input',render); g.addEventListener('change',render);
+})();
+</script><footer class="mft"><div class="wrap">
+  <nav class="ftnav">
+    <a href="/media/">地方採用ラボ トップ</a>
+    <a href="/media/search/">記事を探す</a>
+    <a href="/">OfferBox運用代行（完全成果報酬型）</a>
+    <a href="/#entry">お問い合わせ</a>
+  </nav>
+  <div class="ftgroups">
+    <a href="/media/category/area/">エリアから探す</a><a href="/media/category/industry/">業種から探す</a><a href="/media/category/issue/">採用の課題から探す</a><a href="/media/category/dr/">ダイレクトリクルーティング・OfferBox</a><a href="/media/category/theme/">地方採用のテーマ</a>
+  </div>
+  <div class="ftgroups">
+    <a href="https://www.agent-best.net/" target="_blank" rel="noopener">エージェントベスト公式サイト ↗</a>
+    <a href="https://scout.agent-best.net/" target="_blank" rel="noopener">スカウト代行サービス ↗</a>
+    <a href="https://green.agent-best.net/" target="_blank" rel="noopener">Green運用代行 ↗</a>
+    <a href="https://infra.agent-best.net/" target="_blank" rel="noopener">Infra長期インターン採用代理店 ↗</a>
+    <a href="https://eraberusaiyodaiko.com/" target="_blank" rel="noopener">採用代行マッチング「エラベル」 ↗</a>
+  </div>
+  <p class="fttag">地方の中小・中堅企業のための、新卒採用ノウハウメディア<br>
+  株式会社エージェントベスト／東京都港区六本木4-8-7 嶋田ビル5階／有料職業紹介事業 許可番号 13-ユ-316964<br>
+  © 株式会社エージェントベスト</p>
+</div></footer>
+</body>
+</html>
