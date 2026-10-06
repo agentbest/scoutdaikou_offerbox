@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://scoutdaikou-offerbox.agent-best.net/sitemap.xml
