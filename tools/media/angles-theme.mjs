@@ -28,7 +28,7 @@ export const THEME_ANGLES = [
   },
   {
     slug: 'why',
-    title: (c) => `なぜ${c.subject}が採用に効くのか｜構造から考える`,
+    title: (c) => `${c.subject}｜なぜ採用に効くのかを構造から考える`,
     desc: (c) => `${c.subject}が地方企業の新卒採用にどう影響しているかを、構造の側から整理しました。`,
     tags: ['地方採用', '採用市場'],
     sections: (c, r) => [
@@ -52,7 +52,7 @@ export const THEME_ANGLES = [
   },
   {
     slug: 'company',
-    title: (c) => `${c.subject}に企業ができること｜自社で動かせる範囲`,
+    title: (c) => `${c.subject}｜企業が自社で動かせる範囲`,
     desc: (c) => `${c.subject}という構造のなかで、地方の中小企業が自社で変えられる部分を整理しました。`,
     tags: ['地方採用', '採用実務'],
     sections: (c, r) => [
@@ -75,7 +75,7 @@ export const THEME_ANGLES = [
   },
   {
     slug: 'scout',
-    title: (c) => `${c.subject}とスカウト型採用｜狙って届ける`,
+    title: (c) => `${c.subject}｜スカウト型採用で狙って届ける`,
     desc: (c) => `${c.subject}に関心のある学生に、ダイレクトリクルーティングでどう届けるかを整理しました。`,
     tags: ['ダイレクトリクルーティング'],
     sections: (c, r) => [
@@ -99,7 +99,7 @@ export const THEME_ANGLES = [
   },
   {
     slug: 'message',
-    title: (c) => `${c.subject}を学生にどう伝えるか｜具体まで落とす`,
+    title: (c) => `${c.subject}｜学生にどう伝えるか、具体まで落とす`,
     desc: (c) => `${c.subject}に関わる情報を、学生が判断材料として使える形で伝えるための書き方をまとめました。`,
     tags: ['採用広報'],
     sections: (c, r) => [
@@ -123,7 +123,7 @@ export const THEME_ANGLES = [
   },
   {
     slug: 'mistakes',
-    title: (c) => `${c.subject}で企業がやりがちな失敗`,
+    title: (c) => `${c.subject}｜企業がやりがちな失敗`,
     desc: (c) => `${c.subject}を採用に結びつけようとするときに陥りやすい失敗を整理しました。`,
     tags: ['採用実務'],
     sections: (c, r) => [
@@ -146,7 +146,7 @@ export const THEME_ANGLES = [
   },
   {
     slug: 'practice',
-    title: (c) => `${c.subject}を実務に落とす｜手順と担当`,
+    title: (c) => `${c.subject}｜実務に落とす手順と担当`,
     desc: (c) => `${c.subject}を、採用の実務としてどう進めるかを手順にまとめました。`,
     tags: ['採用実務'],
     sections: (c, r) => [
@@ -170,7 +170,7 @@ export const THEME_ANGLES = [
   },
   {
     slug: 'faq',
-    title: (c) => `${c.subject}についてよく受ける質問`,
+    title: (c) => `${c.subject}｜よくある質問`,
     desc: (c) => `${c.subject}に関して、地方の中小企業からよく受ける質問と、その考え方をまとめました。`,
     tags: ['FAQ'],
     sections: (c, r) => [

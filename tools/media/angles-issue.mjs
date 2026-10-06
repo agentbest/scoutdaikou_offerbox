@@ -6,7 +6,7 @@ const pt = (c, i) => c.points[i % c.points.length];
 export const ISSUE_ANGLES = [
   {
     slug: 'basics',
-    title: (c) => `${c.subject}とは｜地方の中小企業がまず押さえること`,
+    title: (c) => `${c.subject}｜地方の中小企業がまず押さえること`,
     desc: (c) => `${c.subject}について、地方の中小・中堅企業が新卒採用で押さえておくべき前提と、最初に手をつける順番をまとめました。`,
     tags: ['採用実務'],
     sections: (c, r) => [
@@ -33,7 +33,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'cause',
-    title: (c) => `${c.subject}がうまくいかない原因を切り分ける`,
+    title: (c) => `${c.subject}｜うまくいかない原因を切り分ける`,
     desc: (c) => `${c.subject}で成果が出ないとき、原因がどこにあるのかを順番に切り分けるための見方をまとめました。`,
     tags: ['採用実務', '課題分析'],
     sections: (c, r) => [
@@ -57,7 +57,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'smb',
-    title: (c) => `中小企業が${c.subject}に取り組むなら｜絞って深くやる`,
+    title: (c) => `${c.subject}｜中小企業は絞って深くやる`,
     desc: (c) => `人員も予算も限られる中小企業が${c.subject}に取り組むときの、優先順位のつけ方と現実的な進め方をまとめました。`,
     tags: ['中小企業', '採用実務'],
     sections: (c, r) => [
@@ -82,7 +82,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'local',
-    title: (c) => `地方企業の${c.subject}｜都市部とは前提が違う`,
+    title: (c) => `${c.subject}｜地方企業は都市部と前提が違う`,
     desc: (c) => `地方の企業が${c.subject}に取り組むときに、都市部の企業とは条件が違う点を整理しました。`,
     tags: ['地方採用'],
     sections: (c, r) => [
@@ -106,7 +106,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'steps',
-    title: (c) => `${c.subject}の進め方｜何から手をつけるか`,
+    title: (c) => `${c.subject}｜進め方と、何から手をつけるか`,
     desc: (c) => `${c.subject}に着手するときの手順を、準備・実行・振り返りの順に整理しました。`,
     tags: ['採用実務'],
     sections: (c, r) => [
@@ -131,7 +131,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'mistakes',
-    title: (c) => `${c.subject}でよくある失敗｜手を打つ前に確認すること`,
+    title: (c) => `${c.subject}｜よくある失敗と、手を打つ前の確認`,
     desc: (c) => `${c.subject}に取り組むときに陥りやすい失敗を整理し、それぞれの避け方をまとめました。`,
     tags: ['採用実務'],
     sections: (c, r) => [
@@ -155,7 +155,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'checklist',
-    title: (c) => `${c.subject}のチェックリスト｜自社の状態を点検する`,
+    title: (c) => `${c.subject}｜自社の状態を点検するチェックリスト`,
     desc: (c) => `${c.subject}について、自社がいまどこまでできているかを点検するための確認項目をまとめました。`,
     tags: ['採用実務', 'チェックリスト'],
     sections: (c, r) => [
@@ -178,7 +178,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'cost',
-    title: (c) => `${c.subject}にかかる工数と費用｜どこまでやるかの線引き`,
+    title: (c) => `${c.subject}｜工数と費用、どこまでやるかの線引き`,
     desc: (c) => `${c.subject}に必要な工数と費用を見積もり、どこまで自社でやるかを判断するための考え方をまとめました。`,
     tags: ['採用コスト'],
     sections: (c, r) => [
@@ -203,7 +203,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'data',
-    title: (c) => `${c.subject}を数字で見る｜振り返りができる状態にする`,
+    title: (c) => `${c.subject}｜数字で見て、振り返りができる状態にする`,
     desc: (c) => `${c.subject}の成果を測り、翌年に引き継げる形で記録するための考え方をまとめました。`,
     tags: ['採用データ', 'KPI'],
     sections: (c, r) => [
@@ -227,7 +227,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'solo',
-    title: (c) => `人手が足りない会社の${c.subject}｜一人で回す設計`,
+    title: (c) => `${c.subject}｜人手が足りない会社の設計`,
     desc: (c) => `採用専任がいない会社が${c.subject}に取り組むときの、絞り方と続け方をまとめました。`,
     tags: ['人事体制'],
     sections: (c, r) => [
@@ -252,7 +252,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'scout',
-    title: (c) => `${c.subject}とスカウト型採用｜組み合わせると何が変わるか`,
+    title: (c) => `${c.subject}｜スカウト型採用と組み合わせる`,
     desc: (c) => `${c.subject}に取り組むうえで、ダイレクトリクルーティング（スカウト型採用）をどう位置づけるかを整理しました。`,
     tags: ['ダイレクトリクルーティング'],
     sections: (c, r) => [
@@ -302,7 +302,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'inhouse',
-    title: (c) => `${c.subject}は内製か外注か｜判断の基準`,
+    title: (c) => `${c.subject}｜内製と外注の判断基準`,
     desc: (c) => `${c.subject}を自社でやるか外部に任せるかを、費用ではなく継続性の観点から判断する方法をまとめました。`,
     tags: ['採用代行', 'RPO'],
     sections: (c, r) => [
@@ -327,7 +327,7 @@ export const ISSUE_ANGLES = [
 
   {
     slug: 'faq',
-    title: (c) => `${c.subject}についてよく受ける質問`,
+    title: (c) => `${c.subject}｜よくある質問`,
     desc: (c) => `${c.subject}に関して、地方の中小企業からよく受ける質問と、その考え方をまとめました。`,
     tags: ['採用実務', 'FAQ'],
     sections: (c, r) => [

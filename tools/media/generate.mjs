@@ -16,7 +16,7 @@
 //    消すと全記事の公開日が再生成日に化けるので消さないこと。
 // ⚠ 統計値は本文に書かない。静的サイトなので更新されず、古い数字が2,000ページに残る。
 
-import { writeFileSync, mkdirSync, readFileSync, existsSync, rmSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync, existsSync, rmSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -31,12 +31,32 @@ import { DR_ANGLES } from './angles-dr.mjs';
 import { THEME_ANGLES } from './angles-theme.mjs';
 import { rngFor, PREMISE, CLOSERS, CAUTIONS, esc, ul, localizePref } from './common.mjs';
 import { qaSection, applySection, misreadSection, relatedHubs, hubFactsSection } from './deepen.mjs';
+import { AREA_ALTS } from './angle-alts-area.mjs';
+import { AREA_ALTS_2 } from './angle-alts-area2.mjs';
+import { INDUSTRY_ALTS } from './angle-alts-industry.mjs';
+import { ISSUE_ALTS } from './angle-alts-issue.mjs';
+import { DR_ALTS } from './angle-alts-dr.mjs';
+import { THEME_ALTS } from './angle-alts-theme.mjs';
 import { CSS, SITE, MEDIA_NAME, MEDIA_TAGLINE, page, crumb, breadcrumbLd, ctaBlock } from './render.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '../..');
 const OUT = resolve(ROOT, 'media');
 const SEEN_FILE = resolve(HERE, 'first-seen.json');
+
+// 切り口の「全ハブで同じ文になる段落」に持たせた言い換えの変種。
+// キーは "切り口slug:セクション番号:段落番号"（angle-alts-*.mjs の冒頭を参照）。
+// ⚠ グループごとに分けて持つ。切り口のslugはグループをまたぐと重複するため
+//   （issue と dr の basics、industry と issue と dr の local など）、
+//   一つのオブジェクトに混ぜると別グループの文面が差し込まれる。
+const ALTS = {
+  area: { ...AREA_ALTS, ...AREA_ALTS_2 },
+  industry: INDUSTRY_ALTS,
+  issue: ISSUE_ALTS,
+  dr: DR_ALTS,
+  theme: THEME_ALTS,
+};
+const ALTS_USED = new Set();
 
 const ANGLES = {
   area: [...AREA_ANGLES, ...AREA_ANGLES_2],
@@ -72,9 +92,19 @@ function buildArticle(hub, angle, serial) {
   const c = contextOf(hub);
   const r = rngFor(serial * 7919 + 31);
 
-  const sections = angle.sections(c, r).map((s) => ({
+  const sections = angle.sections(c, r).map((s, si) => ({
     h: s.h,
-    p: s.p.map((f) => (typeof f === 'function' ? f() : f)).filter(Boolean),
+    // 変種を持つ位置は「元の文 ＋ 変種」から1つ選ぶ。持たない位置はそのまま。
+    p: s.p
+      .map((f) => (typeof f === 'function' ? f() : f))
+      .filter(Boolean)
+      .map((text, pi) => {
+        const key = `${angle.slug}:${si}:${pi}`;
+        const alt = ALTS[hub.group]?.[key];
+        if (!alt) return text;
+        ALTS_USED.add(`${hub.group}:${key}`);
+        return r.pick([() => text, ...alt])(c);
+      }),
     list: typeof s.list === 'function' ? s.list(c) : s.list,
   }));
 
@@ -418,6 +448,30 @@ for (const g of GROUPS) {
   }, body));
 }
 
+/* ---------- 古くなった生成物の掃除 ---------- */
+// 切り口やハブを入れ替えると、前回まで作っていた記事ディレクトリが取り残される。
+// 残すと sitemap に無いページが公開されたままになるので、ここで消す。
+let removed = 0;
+{
+  const keep = new Set(articles.map((a) => a.slug));
+  const reserved = new Set(['hub', 'category', 'search', 'assets']);
+  for (const name of readdirSync(OUT, { withFileTypes: true })) {
+    if (!name.isDirectory() || reserved.has(name.name) || keep.has(name.name)) continue;
+    rmSync(resolve(OUT, name.name), { recursive: true, force: true });
+    removed += 1;
+  }
+  const hubKeep = new Set(HUBS.map((h) => h.slug));
+  const hubDir = resolve(OUT, 'hub');
+  for (const name of readdirSync(hubDir, { withFileTypes: true })) {
+    if (!name.isDirectory() || hubKeep.has(name.name)) continue;
+    rmSync(resolve(hubDir, name.name), { recursive: true, force: true });
+    removed += 1;
+  }
+  // 公開日の台帳からも、もう無い記事の行を落とす
+  for (const slug of Object.keys(seen)) if (!keep.has(slug)) delete seen[slug];
+  writeFileSync(SEEN_FILE, JSON.stringify(seen, null, 0), 'utf8');
+}
+
 /* ---------- CSS ---------- */
 write('media/assets/media.css', CSS);
 
@@ -456,7 +510,19 @@ ${urls.map((u) => `<url><loc>${u.loc}</loc><lastmod>${u.lastmod ?? now.slice(0, 
   console.log(`公開日: 新規 ${newCount}本（既存は tools/media/first-seen.json の日付を維持）`);
   console.log(`slug重複: ${dupSlug}件、タイトル重複: ${dupTitle}件、本文の完全一致: ${dupBody}件`);
   console.log(`本文の平均文字数: ${avg}（最短 ${min}）`);
-  console.log(`出力: ${OUT}/ ＋ sitemap.xml / robots.txt`);
+  console.log(`出力: ${OUT}/ ＋ sitemap.xml / robots.txt（不要になった生成物 ${removed}件を削除）`);
+
+  // 章立てを入れ替えると変種のキーがずれて、黙って効かなくなる。使われなかったキーを名指しで出す。
+  const allKeys = Object.entries(ALTS).flatMap(([g, m]) => Object.keys(m).map((k) => `${g}:${k}`));
+  const unused = allKeys.filter((k) => !ALTS_USED.has(k));
+  const variants = Object.values(ALTS).reduce(
+    (n, m) => n + Object.values(m).reduce((x, a) => x + a.length, 0), 0);
+  if (unused.length) {
+    console.warn(`⚠ 使われなかった変種のキーが ${unused.length} 件あります（章立てとずれています）: ${unused.slice(0, 10).join(', ')}`);
+    process.exitCode = 1;
+  } else {
+    console.log(`文面の変種: ${allKeys.length}箇所／${variants}本すべてが使われています`);
+  }
 
   if (dupSlug || dupBody || dupTitle) {
     console.error('⚠ 重複があります。ハブ・切り口の定義を確認してください。');
@@ -464,4 +530,3 @@ ${urls.map((u) => `<url><loc>${u.loc}</loc><lastmod>${u.lastmod ?? now.slice(0, 
   }
   if (min < 900) console.warn(`⚠ 本文が900字を下回る記事があります（最短 ${min}）。切り口の章立てを見直してください。`);
 }
-void rmSync;
