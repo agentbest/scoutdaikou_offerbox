@@ -188,6 +188,34 @@
   .price-feat li{display:flex;gap:11px;font-size:.94rem;color:var(--ink-soft)}
   .price-feat li .ck{width:22px;height:22px;border-radius:50%;background:var(--success);color:#fff;flex:none;display:grid;place-items:center;font-size:.72rem;font-weight:800}
   @media (max-width:680px){.price-body{grid-template-columns:1fr}.price-col+.price-col{border-left:0;border-top:1px solid var(--line)}}
+  /* compare / switch / faq */
+  .cmp{max-width:900px;margin:36px auto 0}
+  .cmp h3{font-size:1.15rem;font-weight:800;text-align:center;margin-bottom:6px}
+  .cmp .sub{text-align:center;color:var(--ink-soft);font-size:.92rem;margin-bottom:18px}
+  .cmp-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+  .cmp table{width:100%;border-collapse:collapse;min-width:520px;font-size:.92rem}
+  .cmp th,.cmp td{padding:14px 18px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  .cmp tr:last-child th,.cmp tr:last-child td{border-bottom:0}
+  .cmp thead th{font-size:.8rem;color:var(--ink-soft);font-weight:700;background:var(--surface-2)}
+  .cmp thead th.us{color:var(--success)}
+  .cmp tbody th{font-weight:700;color:var(--ink);white-space:nowrap}
+  .cmp td{color:var(--ink-soft)}
+  .cmp td.us{color:var(--ink);font-weight:700;background:rgba(18,161,80,.06)}
+  .cmp td.us b{color:var(--success);font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .cmp-note{font-size:.78rem;color:var(--ink-faint);margin-top:10px}
+  .switch{max-width:900px;margin:28px auto 0;border:1px solid var(--success);border-radius:16px;padding:24px 28px;background:var(--surface);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .switch h4{font-size:1.05rem;font-weight:800;margin-bottom:6px}
+  .switch p{color:var(--ink-soft);font-size:.92rem;max-width:36em}
+  .faq{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+  .faq details{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:0 22px}
+  .faq summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:800;display:flex;gap:12px;align-items:flex-start}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary .q{color:var(--accent-ink);font-family:var(--mono);flex:none}
+  .faq summary::after{content:"+";margin-left:auto;color:var(--ink-faint);font-weight:400}
+  .faq details[open] summary::after{content:"−"}
+  .faq .a{padding:0 0 18px 26px;color:var(--ink-soft);font-size:.94rem}
+  @media (max-width:680px){.switch{padding:20px}.cmp th,.cmp td{padding:12px 14px}}
+
 
   /* flow */
   .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:f}
@@ -297,6 +325,7 @@
   .lpshare__done{font-size:.75rem;font-weight:700}
   @media(max-width:640px){.lpshare__btn{width:42px;height:42px}}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "本当に、採用できなければ費用は0円ですか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。初期費用・月額費用はいただいておらず、費用が発生するのは学生が内定を承諾したときだけです（新卒1名あたり20万円）。採用に至らなければ費用は0円です。"}}, {"@type": "Question", "name": "他社のOfferBox運用代行から乗り換えられますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい、乗り換えのご相談を承っています。いまの契約の更新・終了前でもかまいません。現在の運用状況をお伺いしたうえで、運用の進め方とお見積もりをご提案します。"}}, {"@type": "Question", "name": "見積もりだけ依頼できますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。お問い合わせフォームに、卒年・採用予定人数・募集職種をお書きください。相見積もりでの比較にもお使いいただけます。"}}, {"@type": "Question", "name": "内定承諾後に辞退された場合はどうなりますか？", "acceptedAnswer": {"@type": "Answer", "text": "内定承諾後、入社前に辞退された場合はお支払いいただいた成果報酬を100%返金します。入社後の退職は返金の対象外です。"}}]}</script>
 </head>
 <body>
 
@@ -328,8 +357,8 @@
       </p>
       <div class="hero-cta">
         <a href="#entry" class="btn btn-primary btn-lg">無料で相談する<span class="arw">→</span></a>
-        <a href="#service" class="btn btn-ghost btn-lg" style="border-color:var(--on-navy-line);color:var(--on-navy)">サービスを見る</a>
-        <span class="note">フォーム送信のみ／営業のお電話はいたしません</span>
+        <a href="#compare" class="btn btn-ghost btn-lg" style="border-color:var(--on-navy-line);color:var(--on-navy)">月額型の代行と比べる</a>
+        <span class="note">他社代行からの乗り換え・お見積もりだけのご依頼も歓迎／営業のお電話はいたしません</span>
       </div>
 
       <div class="hero-trust">
@@ -489,6 +518,32 @@
           </div>
         </div>
       </div>
+
+      <div class="cmp rv" id="compare">
+        <h3>月額固定型の運用代行と比べると</h3>
+        <p class="sub">採用できなかった月にも費用がかかるかどうかが、いちばん大きな違いです。</p>
+        <div class="cmp-scroll">
+          <table>
+            <thead><tr><th></th><th>一般的な月額固定型の代行</th><th class="us">エージェントベスト（完全成果報酬）</th></tr></thead>
+            <tbody>
+              <tr><th>初期費用</th><td>かかる場合がある</td><td class="us"><b>0円</b></td></tr>
+              <tr><th>月額費用</th><td>契約期間中は毎月発生</td><td class="us"><b>0円</b></td></tr>
+              <tr><th>採用0名だったとき</th><td>月額 × 契約期間分の費用</td><td class="us"><b>0円</b></td></tr>
+              <tr><th>2名採用したとき</th><td>月額 × 契約期間分（成果報酬が別にかかる場合も）</td><td class="us"><b>40万円</b>（20万円 × 2名）</td></tr>
+              <tr><th>費用が発生するタイミング</th><td>運用期間中、毎月</td><td class="us">内定承諾時のみ</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="cmp-note">※ 月額固定型の内容は一般的な料金体系の例です。実際の条件は各社の契約内容によって異なります。</p>
+      </div>
+
+      <div class="switch rv">
+        <div>
+          <h4>いまの代行会社と比較中の方へ</h4>
+          <p>契約更新・終了前のご相談や、お見積もりだけのご依頼も歓迎です。卒年・採用予定人数・現在の運用状況をお書きいただければ、同じ条件でお見積もりをお返しします。</p>
+        </div>
+        <a href="#entry" class="btn btn-primary">見積もりを依頼する<span class="arw">→</span></a>
+      </div>
     </div>
   </section>
 
@@ -508,11 +563,27 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="band" id="faq">
+    <div class="wrap">
+      <div class="sec-head center rv">
+        <span class="kick">08 ・ よくあるご質問</span>
+        <h2>料金と乗り換えについて。</h2>
+      </div>
+      <div class="faq">
+        <details class="rv"><summary><span class="q">Q.</span><span>本当に、採用できなければ費用は0円ですか？</span></summary><p class="a">はい。初期費用・月額費用はいただいておらず、費用が発生するのは学生が内定を承諾したときだけです（新卒1名あたり20万円）。採用に至らなければ費用は0円です。</p></details>
+        <details class="rv"><summary><span class="q">Q.</span><span>他社のOfferBox運用代行から乗り換えられますか？</span></summary><p class="a">はい、乗り換えのご相談を承っています。いまの契約の更新・終了前でもかまいません。現在の運用状況をお伺いしたうえで、運用の進め方とお見積もりをご提案します。</p></details>
+        <details class="rv"><summary><span class="q">Q.</span><span>見積もりだけ依頼できますか？</span></summary><p class="a">はい。お問い合わせフォームに、卒年・採用予定人数・募集職種をお書きください。相見積もりでの比較にもお使いいただけます。</p></details>
+        <details class="rv"><summary><span class="q">Q.</span><span>内定承諾後に辞退された場合はどうなりますか？</span></summary><p class="a">内定承諾後、入社前に辞退された場合はお支払いいただいた成果報酬を100%返金します。入社後の退職は返金の対象外です。</p></details>
+      </div>
+    </div>
+  </section>
+
   <!-- REPRESENTATIVE -->
   <section id="representative">
     <div class="wrap">
       <div class="sec-head center rv">
-        <span class="kick">08 ・ 代表紹介</span>
+        <span class="kick">09 ・ 代表紹介</span>
         <h2>運用の設計は、代表が直接見ています。</h2>
       </div>
       <div class="profile rv">
@@ -547,7 +618,7 @@
   <section class="band" id="company">
     <div class="wrap">
       <div class="sec-head rv">
-        <span class="kick">09 ・ 運営会社</span>
+        <span class="kick">10 ・ 運営会社</span>
         <h2>株式会社エージェントベスト</h2>
       </div>
       <div class="company">
@@ -573,7 +644,7 @@
       <div class="final rv">
         <span class="lbl">Contact ・ 相談無料</span>
         <h2>まずは、採用のお悩みからお聞かせください。</h2>
-        <p>採用ご担当者さま向けの窓口です。完全成果報酬型なので、始めるリスクはありません。内容を確認のうえ、担当者よりご連絡いたします。</p>
+        <p>採用ご担当者さま向けの窓口です。完全成果報酬型なので、始めるリスクはありません。他社代行との比較やお見積もりだけのご依頼も歓迎です。内容を確認のうえ、担当者よりご連絡いたします。</p>
 
         <div class="formcard">
           <form id="contact-form" novalidate>
@@ -591,7 +662,7 @@
             </div>
             <div class="field">
               <label for="message">お問い合わせ内容 <span class="req">必須</span></label>
-              <textarea id="message" name="message" rows="6" required></textarea>
+              <textarea id="message" name="message" rows="6" required placeholder="例）28卒で2名採用したい。現在は他社のOfferBox運用代行を利用中で、比較のため見積もりがほしい。"></textarea>
             </div>
             <p class="form-error" id="form-error" role="alert"></p>
             <button type="submit" class="btn btn-primary submit-btn" id="submit-btn">送信する <span class="arw" aria-hidden="true">→</span></button>
