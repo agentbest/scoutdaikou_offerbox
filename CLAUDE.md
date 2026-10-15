@@ -165,7 +165,7 @@ tools/media/*.mjs を編集
 | ドメイン | リポジトリ | サービス | アクセント色 |
 |---|---|---|---|
 | scout.agent-best.net | agentbest/scout | スカウト代行（主要媒体全般） | インディゴ #4C4FD8 |
-| green.agent-best.net | agentbest/green | Green運用代行（1面談2万円の面談課金） | グリーン #12A150 |
+| green.agent-best.net | agentbest/green | Green運用代行（成功報酬・入社時1名50万円） | グリーン #12A150 |
 | infra.agent-best.net | agentbest/infra | Infra 長期インターン採用代理店 | アンバー #C2610C |
 | scoutdaikou-offerbox.agent-best.net | agentbest/scoutdaikou_offerbox | OfferBox運用代行 | ティール #0D7E93 |
 
