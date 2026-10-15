@@ -219,6 +219,8 @@ footer{background:var(--navy);color:var(--on-navy-soft);padding:46px 0 40px;font
   .art-desc{-webkit-line-clamp:1}
 }
 
+/* アイキャッチ（コーポレートの記事と同じ置き方：パンくずの下・タイトルの上） */
+.article .eyecatch{display:block;width:100%;height:auto;aspect-ratio:1200/630;border-radius:12px;margin:4px 0 20px;background:#1C1C2E}
 /* ===== 地方採用ラボだけの部品 ===== */
 /* 記事冒頭のリード（コーポレートの記事には無いので、目次と同じ控えめな箱にする） */
 .article .lead-box{margin:0 0 1.8em;padding:1rem 1.3rem;border-left:4px solid var(--line-strong);background:var(--surface-2);border-radius:0 8px 8px 0;color:#384049;font-size:.97rem}

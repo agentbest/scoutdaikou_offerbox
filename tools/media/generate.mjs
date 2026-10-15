@@ -10,6 +10,9 @@
 //   media/search/index.html + search.json … 記事検索（インデックスは遅延fetch）
 //   media/assets/media.css             … 共通CSS（render.mjs の CSS 定数の写し）
 //   sitemap.xml / robots.txt           … ルート（LPのトップも含む）
+//   tools/media/image-specs.json       … アイキャッチ・OGP画像の描画指示（画像そのものは images.mjs が作る）
+//
+// ⚠ 記事・ハブを変えたら、続けて node tools/media/images.mjs を実行する（ページは画像を必ず参照するため）。
 //
 // ⚠ 乱数は seed 固定。再生成しても同じ記事になるので、差分レビューができる。
 // ⚠ 公開日は tools/media/first-seen.json に積み上げる（jobsite の first-seen と同じ考え方）。
@@ -196,6 +199,12 @@ const artUrl = (a) => `/media/${a.slug}/`;
 const hubUrl = (h) => `/media/hub/${h}/`;
 const catUrl = (g) => `/media/category/${g}/`;
 
+// アイキャッチ・OGP画像。パスと描画内容を image-specs.json に積み、images.mjs が PNG にする
+const imgSpecs = [];
+const artImg = (a) => `/media/img/${a.slug}.jpg`;
+const ogImg = (name) => `/media/img/og/${name}.jpg`;
+const addImg = (url, spec) => { imgSpecs.push({ path: url.slice(1), ...spec }); return url; };
+
 const byHub = new Map();
 for (const a of articles) {
   if (!byHub.has(a.hub)) byHub.set(a.hub, []);
@@ -266,6 +275,7 @@ for (const a of articles) {
     url: SITE + artUrl(a),
     author: AUTHOR_LD,
     publisher: PUBLISHER_LD,
+    image: SITE + artImg(a),
     articleSection: GROUP_LABEL[a.group],
     keywords: a.tags.join(','),
   };
@@ -273,6 +283,7 @@ for (const a of articles) {
   // 並びはコーポレート・saiyo-media の記事と同じ：パンくず→タイトル→メタ→目次→本文→注記→相談→シェア→同じカテゴリ→監修
   const body = `<main class="wrap article">
   ${articleCrumb(crumbs)}
+  <img class="eyecatch" src="${artImg(a)}" alt="" width="1200" height="630">
   <h1>${esc(a.title)}</h1>
   <p class="meta">
     <a class="meta-hub" href="${hubUrl(a.hub)}">${esc(a.hubLabel)}</a><a class="meta-theme" href="${catUrl(a.group)}">${esc(GROUP_LABEL[a.group])}</a>
@@ -311,6 +322,7 @@ ${stickyCta(a)}`;
     desc: a.desc,
     canonical: SITE + artUrl(a),
     ogType: 'article',
+    ogImage: addImg(artImg(a), { title: a.title, tag: a.hubLabel, groupLabel: GROUP_LABEL[a.group], group: a.group }),
     extraJsonLd: [breadcrumbLd(crumbs), articleLd, faqLd],
   }, body));
 }
@@ -336,6 +348,7 @@ for (const hub of HUBS) {
     // note は複数文あることがあるので、1文目だけを説明文に使う（途中で切れるのを避ける）
     desc: `${hub.label}に関する記事${list.length}本。${hub.note.split('。')[0]}。`,
     canonical: SITE + hubUrl(hub.slug),
+    ogImage: addImg(ogImg(`hub-${hub.slug}`), { title: `${hub.label}｜記事一覧（${list.length}本）`, tag: GROUP_LABEL[hub.group], groupLabel: '', group: hub.group }),
     extraJsonLd: [breadcrumbLd(crumbs)],
   }, body));
 }
@@ -375,6 +388,7 @@ for (const g of GROUPS) {
     title: `${g.label}｜${MEDIA_NAME}`,
     desc: g.lead,
     canonical: SITE + catUrl(g.key),
+    ogImage: addImg(ogImg(`category-${g.key}`), { title: `${g.label}｜${hubs.length}カテゴリ・記事${total}本`, tag: '記事カテゴリ', groupLabel: '', group: g.key }),
     extraJsonLd: [breadcrumbLd(crumbs)],
   }, body));
 }
@@ -433,6 +447,7 @@ for (const g of GROUPS) {
     title: `${MEDIA_NAME}｜${MEDIA_TAGLINE}`,
     desc: `地方の中小・中堅企業に向けた新卒採用のノウハウメディア。都道府県・業種・採用課題・ダイレクトリクルーティングの切り口で${articles.length.toLocaleString('en-US')}本の記事を公開しています。`,
     canonical: `${SITE}/media/`,
+    ogImage: addImg(ogImg('top'), { title: `地方の中小・中堅企業のための新卒採用ノウハウ｜都道府県・業種・採用の課題・スカウト採用から${articles.length.toLocaleString('en-US')}本`, tag: '新卒採用ノウハウメディア', groupLabel: '', group: 'site', size: 58 }),
     extraJsonLd: [
       breadcrumbLd([{ name: MEDIA_NAME }]),
       { '@context': 'https://schema.org', '@type': 'WebSite', name: MEDIA_NAME, url: `${SITE}/media/`, inLanguage: 'ja',
@@ -498,7 +513,7 @@ for (const g of GROUPS) {
 let removed = 0;
 {
   const keep = new Set(articles.map((a) => a.slug));
-  const reserved = new Set(['hub', 'category', 'search', 'assets']);
+  const reserved = new Set(['hub', 'category', 'search', 'assets', 'img']);
   for (const name of readdirSync(OUT, { withFileTypes: true })) {
     if (!name.isDirectory() || reserved.has(name.name) || keep.has(name.name)) continue;
     rmSync(resolve(OUT, name.name), { recursive: true, force: true });
@@ -515,6 +530,9 @@ let removed = 0;
   for (const slug of Object.keys(seen)) if (!keep.has(slug)) delete seen[slug];
   writeFileSync(SEEN_FILE, JSON.stringify(seen, null, 0), 'utf8');
 }
+
+/* ---------- 画像の描画指示 ---------- */
+writeFileSync(resolve(HERE, 'image-specs.json'), JSON.stringify(imgSpecs), 'utf8');
 
 /* ---------- CSS ---------- */
 write('media/assets/media.css', CSS);

@@ -61,7 +61,8 @@ const GROUP_NAV = [
 ];
 const HEADER_NAV = ['area', 'industry', 'issue', 'dr'];
 
-function head({ title, desc, canonical, ogType = 'website', extraJsonLd = [] }) {
+// ogImage は /media/img/ 配下のパス（images.mjs が作る 1200×630 JPEG）
+function head({ title, desc, canonical, ogType = 'website', ogImage = '/media/img/og/top.jpg', extraJsonLd = [] }) {
   const ld = extraJsonLd.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n');
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -79,7 +80,11 @@ function head({ title, desc, canonical, ogType = 'website', extraJsonLd = [] }) 
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="${SITE}${ogImage}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${SITE}${ogImage}">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="/icon-192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

@@ -43,6 +43,7 @@ LPと同じドメイン配下（`https://scoutdaikou-offerbox.agent-best.net/med
 ```
 tools/media/*.mjs を編集
   → node tools/media/generate.mjs   （media/ 2,138ページ ＋ sitemap.xml / robots.txt を再生成。数秒）
+  → node tools/media/images.mjs     （アイキャッチ・OGP画像。変わったものだけ描き直す。全部だと数分〜十数分）
   → ブラウザで確認 → commit & push  （GitHub Pages に即反映）
 ```
 
@@ -59,6 +60,8 @@ tools/media/*.mjs を編集
 | `tools/media/render.mjs` | ページの外枠（ヘッダー・フッター・GA4）と部品（記事末フォーム・下部バー・相談バンド・シェア・監修者）、`media.js` の原本（`JS`）。**相談導線の文言はここ1か所**（`CTA_COPY`。グループで出し分け） |
 | `tools/media/style.mjs` | CSS（`/media/assets/media.css` の原本）。`BASE` は saiyo-media の `build-media.js` の CSS を写したもの、`EXTRA` が地方採用ラボだけの部品 |
 | `tools/media/generate.mjs` | 生成器の本体。自己点検（slug重複・タイトル重複・本文の完全一致・文字数・変種の使用状況）を出す。**切り口やハブを入れ替えたときに取り残される記事ディレクトリも消す** |
+| `tools/media/images.mjs` | アイキャッチ兼OGP画像（1200×630 JPEG）を作る。手元の **Microsoft Edge をヘッドレス起動**して DevTools Protocol で撮る（npm 依存なし・Windows の游ゴシック）。`generate.mjs` が書いた `image-specs.json` を読み、`image-hashes.json` と比べて変わったものだけ描く。**デザインを変えたら `TEMPLATE_VERSION` を上げる**（全部描き直し）。`--only <文字列>` で一部だけ試し描きできる |
+| `tools/media/image-specs.json` / `image-hashes.json` | 画像の描画指示（生成物）／描いた内容のハッシュ。どちらも commit する |
 | `tools/media/first-seen.json` | 記事slug → 初出日。**消さない**（消すと全2,000本の公開日が再生成日に化ける） |
 
 ### カテゴリ構成（グループ5 / ハブ131 / 記事2,000）
@@ -136,7 +139,11 @@ tools/media/*.mjs を編集
 - GA4（G-1XXMP8Y1B4、saiyo-media・コーポレートと同じプロパティ）: `cta_click`（cta_location）／`form_start`／`generate_lead`（form_location=article）／`share`。
 - メディアトップは 課題→エリア（47都道府県を地域ブロックで全部）→相談バンド→業種→スカウト採用→テーマ の順。
 - 外部CDNは読まない（GA4の gtag.js だけ例外）。CSS・JS は `/media/assets/` に切り出し。ロゴ・ファビコンはルートの画像を参照。
-- アイキャッチ画像・OGP画像は未対応（saiyo-media と同じ）。
+- **アイキャッチ・OGP画像（2026-10-16〜）**: 記事は `/media/img/{slug}.jpg`（記事上部のアイキャッチと og:image を兼ねる。置き方はコーポレートと同じくパンくずの下・タイトルの上）。
+  トップ・グループ・ハブは `/media/img/og/{top|category-*|hub-*}.jpg`、検索ページはトップの画像。`twitter:card` は `summary_large_image`、Article の JSON-LD に `image`。
+  デザインはコーポレートのアイキャッチの型（濃色グラデーション・左上のカテゴリ枠・大きなタイトル・下のアクセント線・右上の円）を #1C1C2E 系で。アクセント色はグループ別（エリア水色／業種金／課題橙／スカウト緑／テーマ紫）。
+  タイトルの「｜」の前を大きく、後ろを副題にしている。**ページは画像を必ず参照するので、記事・ハブを足したら images.mjs まで回すこと**（回さないと画像が404）。
+  JPEGなのは容量のため（PNGだとグラデーションで1枚約190KB、JPEG品質88で約45KB・全体で約100MB）。
 
 ### LPからの導線
 
