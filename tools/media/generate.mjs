@@ -37,7 +37,8 @@ import { INDUSTRY_ALTS } from './angle-alts-industry.mjs';
 import { ISSUE_ALTS } from './angle-alts-issue.mjs';
 import { DR_ALTS } from './angle-alts-dr.mjs';
 import { THEME_ALTS } from './angle-alts-theme.mjs';
-import { CSS, SITE, MEDIA_NAME, MEDIA_TAGLINE, page, crumb, breadcrumbLd, ctaBlock } from './render.mjs';
+import { CSS, JS, SITE, MEDIA_NAME, MEDIA_TAGLINE, page, crumb, articleCrumb, breadcrumbLd, ctaBlock, ctaBand, stickyCta,
+  shareHtml, AUTHOR, AUTHOR_LD, PUBLISHER_LD } from './render.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '../..');
@@ -201,13 +202,17 @@ for (const a of articles) {
   byHub.get(a.hub).push(a);
 }
 
-const jpDate = (s) => `${s.slice(0, 4)}年${Number(s.slice(5, 7))}月${Number(s.slice(8, 10))}日`;
+// 2026-09-12 → 2026/9/12（コーポレートの記事と同じ見え方）
+const jpDate = (s) => `${s.slice(0, 4)}/${Number(s.slice(5, 7))}/${Number(s.slice(8, 10))}`;
 
-const acard = (a) => `<li class="acard">
-  <a class="t" href="${artUrl(a)}">${esc(a.title)}</a>
-  <p>${esc(a.desc)}</p>
-  <div class="meta"><span>${esc(a.hubLabel)}</span><span>${a.pubDate}</span></div>
-</li>`;
+// 一覧の1行（タイトル＋説明＋カテゴリ）。コーポレート・saiyo-media の一覧と同じ形
+const acard = (a) => `<li><a href="${artUrl(a)}">
+      <span class="art-title">${esc(a.title)}</span>
+      <span class="art-desc">${esc(a.desc)}</span>
+      <span class="art-meta"><span class="tag">${esc(a.hubLabel)}</span><span class="theme">${esc(GROUP_LABEL[a.group])}</span></span>
+    </a></li>`;
+const artList = (list) => `<ul class="art-list">${list.map(acard).join('')}</ul>`;
+const hubCard = (h) => `<a class="hubcard" href="${hubUrl(h.slug)}"><span class="t">${esc(h.label)}</span><span class="c">${h.articles}本</span></a>`;
 
 const DISCLAIMER = `この記事は、${'株式会社エージェントベスト'}が新卒採用の支援で得た知見をもとに構成した実務向けの解説です。特定の企業の事例や、年によって変動する統計値は扱っていません。制度・市況・各サービスの仕様は変わりますので、実際の判断にあたっては一次情報をご確認ください。`;
 
@@ -223,18 +228,26 @@ for (const a of articles) {
   const siblings = (byHub.get(a.hub) ?? []).filter((x) => x.slug !== a.slug);
   const related = siblings.slice(0, 6);
 
-  const secHtml = a.sections.map((s) =>
-    `<h2>${esc(s.h)}</h2>${s.p.map((t) => `<p>${esc(t)}</p>`).join('')}${s.list ? ul(s.list) : ''}` +
-    ((s.after ?? []).map((t) => `<p>${esc(t)}</p>`).join(''))
-  ).join('');
+  // 見出しに id を振って目次を作る（目次はコーポレートの記事と同じく h2 だけ）
+  const heads = [];
+  const h2 = (text) => { const id = `h${heads.length + 1}`; heads.push({ id, text }); return `<h2 id="${id}">${esc(text)}</h2>`; };
 
-  const qaHtml = `<h2>${esc(a.qa.h)}</h2>` + a.qa.qa.map((x) =>
-    `<h3 style="margin:22px 0 0;font-size:1rem;font-weight:800;line-height:1.6">Q. ${esc(x.q)}</h3><p>${esc(x.a)}</p>`
+  const secHtml = a.sections.map((s) =>
+    `${h2(s.h)}${s.p.map((t) => `<p>${esc(t)}</p>`).join('')}${s.list ? ul(s.list) : ''}` +
+    ((s.after ?? []).map((t) => `<p>${esc(t)}</p>`).join(''))
+  ).join('\n');
+
+  const qaHtml = h2(a.qa.h) + a.qa.qa.map((x) =>
+    `<h3 class="qa-q">${esc(x.q)}</h3><p>${esc(x.a)}</p>`
   ).join('');
 
   // 内部リンク。ハブの note の1文目を添えて、リンク先で何が読めるか分かるようにする
-  const relHubHtml = `<h2>あわせて読みたい</h2><ul class="mlist">${a.relHubs.map((h) =>
-    `<li><a href="${hubUrl(h.slug)}">${esc(h.label)}</a>｜${esc(h.note.split('。')[0])}。</li>`).join('')}</ul>`;
+  const relHubHtml = h2('あわせて読みたい') + `<ul class="hublinks">${a.relHubs.map((h) =>
+    `<li><a href="${hubUrl(h.slug)}">${esc(h.label)}</a><span>${esc(h.note.split('。')[0])}。</span></li>`).join('')}</ul>`;
+
+  const closerHtml = h2('この記事のまとめ') + `<p>${esc(a.closer)}</p>`;
+  const toc = `<nav class="toc" aria-label="目次"><p class="toc__t">目次</p><ol>`
+    + heads.map((h) => `<li><a href="#${h.id}">${esc(h.text)}</a></li>`).join('') + `</ol></nav>`;
 
   const bodyText =
     a.sections.map((s) => s.p.join('') + (s.list ?? []).join('') + (s.after ?? []).join('')).join('') +
@@ -250,33 +263,39 @@ for (const a of articles) {
     datePublished: a.pubDate,
     dateModified: a.pubDate,
     mainEntityOfPage: { '@type': 'WebPage', '@id': SITE + artUrl(a) },
-    author: { '@type': 'Organization', name: '株式会社エージェントベスト', url: 'https://www.agent-best.net/' },
-    publisher: { '@type': 'Organization', name: '株式会社エージェントベスト', url: 'https://www.agent-best.net/' },
+    url: SITE + artUrl(a),
+    author: AUTHOR_LD,
+    publisher: PUBLISHER_LD,
     articleSection: GROUP_LABEL[a.group],
     keywords: a.tags.join(','),
   };
 
-  const body = `${crumb(crumbs)}
-<main><div class="wrap narrow sec">
-<article class="post">
+  // 並びはコーポレート・saiyo-media の記事と同じ：パンくず→タイトル→メタ→目次→本文→注記→相談→シェア→同じカテゴリ→監修
+  const body = `<main class="wrap article">
+  ${articleCrumb(crumbs)}
   <h1>${esc(a.title)}</h1>
-  <div class="postmeta"><span>公開日 ${jpDate(a.pubDate)}</span><span><a href="${hubUrl(a.hub)}">${esc(a.hubLabel)}</a></span><span><a href="${catUrl(a.group)}">${esc(GROUP_LABEL[a.group])}</a></span></div>
-  <p class="lead">${esc(a.lead)}</p>
-  ${secHtml}
-  ${qaHtml}
-  ${relHubHtml}
-  <h2>この記事のまとめ</h2>
-  <p>${esc(a.closer)}</p>
-  <div class="tags">${a.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>
-  <p class="note">${esc(DISCLAIMER)}<br>株式会社エージェントベスト／有料職業紹介事業 許可番号 13-ユ-316964</p>
-</article>
-${ctaBlock()}
-<section class="related">
-  <h2>${esc(a.hubLabel)}の他の記事</h2>
-  <ul class="alist">${related.map(acard).join('')}</ul>
-  <p style="margin-top:12px"><a href="${hubUrl(a.hub)}">${esc(a.hubLabel)}の記事をすべて見る →</a></p>
-</section>
-</div></main>`;
+  <p class="meta">
+    <a class="meta-hub" href="${hubUrl(a.hub)}">${esc(a.hubLabel)}</a><a class="meta-theme" href="${catUrl(a.group)}">${esc(GROUP_LABEL[a.group])}</a>
+    <span class="meta-date">公開日 ${jpDate(a.pubDate)}</span>
+  </p>
+  <p class="lead-box">${esc(a.lead)}</p>
+  ${toc}
+  <div class="body">
+${secHtml}
+${qaHtml}
+${relHubHtml}
+${closerHtml}
+  </div>
+  <div class="sources"><strong>この記事について</strong><p>${esc(DISCLAIMER)}</p><p class="lic">株式会社エージェントベスト／有料職業紹介事業 許可番号 13-ユ-316964</p></div>
+  ${ctaBlock(a)}
+  ${shareHtml(SITE + artUrl(a), a.title)}
+  <section class="same-hub"><h2 class="block-title">${esc(a.hubLabel)}の他の記事</h2>
+    ${artList(related)}
+    <p class="more"><a href="${hubUrl(a.hub)}">${esc(a.hubLabel)}の記事をすべて見る →</a></p>
+  </section>
+  ${AUTHOR}
+</main>
+${stickyCta(a)}`;
 
   const faqLd = {
     '@context': 'https://schema.org',
@@ -291,6 +310,7 @@ ${ctaBlock()}
     title: `${a.title}｜${MEDIA_NAME}`,
     desc: a.desc,
     canonical: SITE + artUrl(a),
+    ogType: 'article',
     extraJsonLd: [breadcrumbLd(crumbs), articleLd, faqLd],
   }, body));
 }
@@ -304,15 +324,13 @@ for (const hub of HUBS) {
     { name: hub.label },
   ];
   const body = `${crumb(crumbs)}
-<main><div class="wrap sec">
-  <div class="sec-head" style="margin-bottom:18px">
-    <h2 style="font-size:1.6rem">${esc(hub.label)}</h2>
-    <p>${esc(hub.note)}</p>
-    <p style="font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);margin-top:10px">${list.length}本の記事</p>
-  </div>
-  <ul class="alist">${list.map(acard).join('')}</ul>
-  ${ctaBlock()}
-</div></main>`;
+<main class="wrap listing">
+  <h1>${esc(hub.label)}</h1>
+  <p class="lead">${esc(hub.note)}</p>
+  <p class="count">${list.length}件</p>
+  ${artList(list)}
+  ${ctaBand(hub.group, `hub-${hub.slug}`)}
+</main>`;
   write(`media/hub/${hub.slug}/index.html`, page({
     title: `${hub.label}の記事一覧｜${MEDIA_NAME}`,
     // note は複数文あることがあるので、1文目だけを説明文に使う（途中で切れるのを避ける）
@@ -323,6 +341,9 @@ for (const hub of HUBS) {
 }
 
 /* ---------- グループページ ---------- */
+// グループの切り替え（コーポレート・saiyo-media の柱ナビと同じピル型）
+const groupNav = (active) => `<nav class="pnav"><a href="/media/"${active === '' ? ' class="on"' : ''}>すべて</a>`
+  + GROUPS.map((g) => `<a href="${catUrl(g.key)}"${g.key === active ? ' class="on"' : ''}>${esc(g.label)}</a>`).join('') + `</nav>`;
 for (const g of GROUPS) {
   const hubs = HUBS.filter((h) => h.group === g.key);
   const total = hubs.reduce((n, h) => n + h.articles, 0);
@@ -334,23 +355,22 @@ for (const g of GROUPS) {
     inner = BLOCKS.map((b) => {
       const hs = hubs.filter((h) => PREF_BY_SLUG.get(h.pref).block === b.key);
       if (!hs.length) return '';
-      return `<div class="blocklabel">${esc(b.label)}</div>
-        <div class="hubgrid">${hs.map((h) => `<a class="hubcard" href="${hubUrl(h.slug)}"><div class="t">${esc(h.label)}</div><div class="c">${h.articles}本</div></a>`).join('')}</div>`;
+      return `<p class="blocklabel">${esc(b.label)}</p>
+        <div class="hubgrid">${hs.map(hubCard).join('')}</div>`;
     }).join('');
   } else {
-    inner = `<div class="hubgrid">${hubs.map((h) => `<a class="hubcard" href="${hubUrl(h.slug)}"><div class="t">${esc(h.label)}</div><div class="c">${h.articles}本</div></a>`).join('')}</div>`;
+    inner = `<div class="hubgrid">${hubs.map(hubCard).join('')}</div>`;
   }
 
   const body = `${crumb(crumbs)}
-<main><div class="wrap sec">
-  <div class="sec-head" style="margin-bottom:20px">
-    <h2 style="font-size:1.6rem">${esc(g.label)}</h2>
-    <p>${esc(g.lead)}</p>
-    <p style="font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);margin-top:10px">${hubs.length}カテゴリ／${total}本の記事</p>
-  </div>
+<main class="wrap listing">
+  <h1>${esc(g.label)}</h1>
+  <p class="lead">${esc(g.lead)}</p>
+  ${groupNav(g.key)}
+  <p class="count">${hubs.length}カテゴリ／${total}件</p>
   ${inner}
-  ${ctaBlock()}
-</div></main>`;
+  ${ctaBand(g.key, `category-${g.key}`)}
+</main>`;
   write(`media/category/${g.key}/index.html`, page({
     title: `${g.label}｜${MEDIA_NAME}`,
     desc: g.lead,
@@ -363,28 +383,51 @@ for (const g of GROUPS) {
 {
   const hubCount = HUBS.length;
   const latest = articles.slice(0, 0); // 全記事が同時公開なので「新着」は出さない
-  const groupsHtml = GROUPS.map((g) => {
+  // 入口の並びは読者（地方の採用担当者）の探し方の順：課題→エリア→業種→スカウト採用→テーマ。
+  // エリアは47都道府県を地域ブロックで区切って全部出す（16件だけ出すと自県が見つからない）。
+  const ORDER = ['issue', 'area', 'industry', 'dr', 'theme'];
+  const groupSec = (g) => {
     const hubs = HUBS.filter((h) => h.group === g.key);
     const total = hubs.reduce((n, h) => n + h.articles, 0);
-    const shown = g.key === 'area' ? hubs.slice(0, 16) : hubs;
-    return `<section class="sec" style="padding:26px 0">
-      <div class="ghead"><h2>${esc(g.label)}</h2><span class="n">${hubs.length}カテゴリ・${total}本</span>
-        <span style="margin-left:auto"><a href="${catUrl(g.key)}">すべて見る →</a></span></div>
-      <p style="color:var(--ink-soft);font-size:.92rem;margin-bottom:14px">${esc(g.lead)}</p>
-      <div class="hubgrid">${shown.map((h) => `<a class="hubcard" href="${hubUrl(h.slug)}"><div class="t">${esc(h.label)}</div><div class="c">${h.articles}本</div></a>`).join('')}</div>
-      ${shown.length < hubs.length ? `<p style="margin-top:12px"><a href="${catUrl(g.key)}">${esc(g.label)}をすべて見る（${hubs.length}カテゴリ） →</a></p>` : ''}
+    const grid = g.key === 'area'
+      ? BLOCKS.map((b) => {
+          const hs = hubs.filter((h) => PREF_BY_SLUG.get(h.pref).block === b.key);
+          return hs.length ? `<p class="blocklabel">${esc(b.label)}</p><div class="hubgrid">${hs.map(hubCard).join('')}</div>` : '';
+        }).join('')
+      : `<div class="hubgrid">${hubs.map(hubCard).join('')}</div>`;
+    return `<section class="msec" id="${g.key}">
+      <h2>${esc(g.label)}</h2>
+      <p class="msec__note">${esc(g.lead)}（${hubs.length}カテゴリ・${total}本）</p>
+      ${grid}
+      <p class="more"><a href="${catUrl(g.key)}">${esc(g.label)}の一覧へ →</a></p>
     </section>`;
-  }).join('');
+  };
+  const G = Object.fromEntries(GROUPS.map((g) => [g.key, g]));
 
-  const body = `<section class="mhero"><div class="wrap mhero-in">
-  <span class="eyebrow">CHIHO SAIYO LAB ・ 地方の新卒採用を、実務の言葉で</span>
-  <h1>地方の中小・中堅企業のための、<br>新卒採用ノウハウメディア。</h1>
-  <p>知名度でも予算でも大手に及ばない会社が、それでも新卒を採るために何をすればいいのか。都道府県・業種・課題の3つの切り口から、実務に落とせる形でまとめています。運営は、OfferBox運用代行を完全成果報酬型で提供する株式会社エージェントベストです。</p>
-  <div class="counts"><span><b>${articles.length.toLocaleString('en-US')}</b>本の記事</span><span><b>${hubCount}</b>カテゴリ</span><span><b>47</b>都道府県</span></div>
-</div></section>
-<main><div class="wrap">${groupsHtml}
-  <div class="sec" style="padding-top:8px">${ctaBlock()}</div>
-</div></main>`;
+  const body = `${crumb([{ name: 'OfferBox運用代行', url: '/' }, { name: MEDIA_NAME }])}
+<main class="mtop">
+  <div class="wrap">
+    <section class="mhero">
+      <h1>${esc(MEDIA_NAME)}</h1>
+      <p class="mhero__lead">知名度でも予算でも大手に及ばない地方の中小・中堅企業が、それでも新卒を採るために何をすればいいのか。都道府県・業種・採用の課題・スカウト採用の切り口で、<strong>${articles.length.toLocaleString('en-US')}本</strong>（${hubCount}カテゴリ）の記事にまとめています。運営は、OfferBox運用代行を完全成果報酬型で提供する株式会社エージェントベストです。</p>
+      <nav class="jump" aria-label="記事の探し方">
+        ${ORDER.map((k) => `<a href="#${k}">${esc(G[k].label)}</a>`).join('')}<a href="/media/search/">キーワードで探す</a>
+      </nav>
+      <aside class="cta-inline">
+        <p>読んでも自社でどう動くか決めきれないときは、採用人数・時期・体制からスカウトの進め方を一緒に整理します（相談無料・成果が出るまで0円）。</p>
+        <a href="/#entry" data-cta="media-top-hero">無料で相談する</a>
+      </aside>
+    </section>
+
+    ${ORDER.slice(0, 2).map((k) => groupSec(G[k])).join('\n    ')}
+
+    ${ctaBand('base', 'media-top-mid')}
+
+    ${ORDER.slice(2).map((k) => groupSec(G[k])).join('\n    ')}
+
+    ${ctaBand('dr', 'media-top-end')}
+  </div>
+</main>`;
 
   write('media/index.html', page({
     title: `${MEDIA_NAME}｜${MEDIA_TAGLINE}`,
@@ -406,16 +449,17 @@ for (const g of GROUPS) {
 
   const groupOpts = GROUPS.map((g) => `<option value="${g.key}">${esc(g.label)}</option>`).join('');
   const body = `${crumb([{ name: MEDIA_NAME, url: '/media/' }, { name: '記事を探す' }])}
-<main><div class="wrap sec">
-  <div class="sec-head" style="margin-bottom:18px"><h2 style="font-size:1.6rem">記事を探す</h2>
-    <p>タイトル・説明・カテゴリ・タグから絞り込めます。</p></div>
+<main class="wrap listing">
+  <h1>記事を探す</h1>
+  <p class="lead">タイトル・説明・カテゴリ・タグから絞り込めます。</p>
   <div class="searchbox">
-    <input id="sq" type="search" placeholder="例：母集団形成、スカウト文面、北海道" autocomplete="off">
-    <select id="sg"><option value="">すべてのカテゴリ</option>${groupOpts}</select>
+    <input id="sq" type="search" placeholder="例：母集団形成、スカウト文面、北海道" autocomplete="off" aria-label="キーワード">
+    <select id="sg" aria-label="カテゴリ"><option value="">すべてのカテゴリ</option>${groupOpts}</select>
   </div>
-  <div id="shits">読み込み中…</div>
-  <ul class="alist" id="sres"></ul>
-</div></main>
+  <p class="count" id="shits">読み込み中…</p>
+  <ul class="art-list" id="sres"></ul>
+  ${ctaBand('base', 'search')}
+</main>
 <script>
 (function(){
   var q=document.getElementById('sq'),g=document.getElementById('sg'),
@@ -431,9 +475,9 @@ for (const g of GROUPS) {
     });
     hits.textContent=out.length+'件';
     res.innerHTML=out.slice(0,80).map(function(it){
-      return '<li class="acard"><a class="t" href="/media/'+it[0]+'/">'+esc(it[1])+'</a><p>'+esc(it[2])+'</p>'+
-             '<div class="meta"><span>'+esc(it[3])+'</span></div></li>';
-    }).join('')+(out.length>80?'<li class="acard"><p>他 '+(out.length-80)+' 件。キーワードで絞り込んでください。</p></li>':'');
+      return '<li><a href="/media/'+it[0]+'/"><span class="art-title">'+esc(it[1])+'</span><span class="art-desc">'+esc(it[2])+'</span>'+
+             '<span class="art-meta"><span class="tag">'+esc(it[3])+'</span></span></a></li>';
+    }).join('')+(out.length>80?'<li><p class="count" style="padding:.9em .2em">他 '+(out.length-80)+' 件。キーワードで絞り込んでください。</p></li>':'');
   }
   fetch('/media/search.json').then(function(r){return r.json();}).then(function(d){
     items=d.items; hits.textContent=items.length+'件'; render();
@@ -474,6 +518,7 @@ let removed = 0;
 
 /* ---------- CSS ---------- */
 write('media/assets/media.css', CSS);
+write('media/assets/media.js', JS);
 
 /* ---------- sitemap / robots ---------- */
 {

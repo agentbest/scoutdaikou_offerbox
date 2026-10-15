@@ -56,7 +56,8 @@ tools/media/*.mjs を編集
 | `tools/media/deepen.mjs` ＋ `deepen-extra.mjs` | 全記事に足す共通パート（ハブ固有の前提／よくある誤解／自社に当てはめる／よくある質問／内部リンク） |
 | `tools/media/angle-alts-area.mjs` / `angle-alts-area2.mjs` / `angle-alts-industry.mjs` / `angle-alts-issue.mjs` / `angle-alts-dr.mjs` / `angle-alts-theme.mjs` | **切り口の固定段落に持たせた言い換えの変種**（346箇所・692本）。キーは `"切り口slug:セクション番号:段落番号"`。グループごとに分けて持つ |
 | `tools/media/common.mjs` | seed固定の乱数、使い回す段落バンク、都道府県の言い換え（道内／都内／府内） |
-| `tools/media/render.mjs` | HTMLの組み立てとCSS。**CTAの文言はここ1か所**（`ctaBlock()`） |
+| `tools/media/render.mjs` | ページの外枠（ヘッダー・フッター・GA4）と部品（記事末フォーム・下部バー・相談バンド・シェア・監修者）、`media.js` の原本（`JS`）。**相談導線の文言はここ1か所**（`CTA_COPY`。グループで出し分け） |
+| `tools/media/style.mjs` | CSS（`/media/assets/media.css` の原本）。`BASE` は saiyo-media の `build-media.js` の CSS を写したもの、`EXTRA` が地方採用ラボだけの部品 |
 | `tools/media/generate.mjs` | 生成器の本体。自己点検（slug重複・タイトル重複・本文の完全一致・文字数・変種の使用状況）を出す。**切り口やハブを入れ替えたときに取り残される記事ディレクトリも消す** |
 | `tools/media/first-seen.json` | 記事slug → 初出日。**消さない**（消すと全2,000本の公開日が再生成日に化ける） |
 
@@ -121,15 +122,21 @@ tools/media/*.mjs を編集
 ### 現状の課題（次に触るときに見るところ）
 - 切り口は全ハブ共通なので、ハブによっては見出しと中身の相性が良くない組み合わせが残る
   （例: `住宅手当・社宅・寮｜内製と外注の判断基準`）。ハブごとにタイトルを上書きできる仕組みは入れていない。
-- GA4 等の解析は**入れていない**（LP本体にも入っていないため）。入れるならLPと合わせて判断する。
+- GA4 はメディアにだけ入っている（2026-10-15〜）。LP本体（index.html）には未導入。
 - 記事の公開日は全2,000本が立ち上げ日。日付を分散させる（先付け・後付け）ことはしていない。
 
-### 見た目
+### 見た目・問い合わせ導線（2026-10-15 にコーポレート・求人広告代理店メディアに揃えた）
 
-- LPと同じトークン（白ベース／ネイビー×ティール、ダークモード無効）。**LPの配色を変えたら `render.mjs` の `CSS` も合わせる。**
-- 外部CDNは読まない（LPと同じ方針）。ただし2,000ページで同じCSSを重複させないため、
-  **CSSだけは `/media/assets/media.css` に切り出している**（`render.mjs` の `CSS` 定数が原本）。
-- ロゴ・ファビコンはルートの `logo.png` / `favicon.ico` / `icon-192.png` / `apple-touch-icon.png` を参照。
+- 見た目はコーポレートの記事（www.agent-best.net/media/）と saiyo-media の記事（saiyo-media.agent-best.net/media/）に揃えた。
+  **白地×#1C1C2E**、見出しはグレー帯＋左線、メタはチップ。**LPのティールはメディアでは使わない**（LPの配色を変えてもメディアは追従しない）。
+- 記事の並び: パンくず→タイトル→メタ（ハブ・グループ・公開日）→リード→目次→本文（Q&A・あわせて読みたい・まとめ）→この記事について（DISCLAIMER）→**記事末フォーム**→シェア→同じハブの他の記事→監修者（松岡・SNSリンク）。下部バー（`.sticky-cta`）あり。
+- JSON-LD: Article（author＝松岡の Person、publisher＝`https://www.agent-best.net/#organization`）＋ BreadcrumbList ＋ FAQPage。
+- **記事末フォーム**はLPと同じGoogleフォーム・同じ entry ID（`render.mjs` の `JS`）。SOURCE＝「地方採用ラボ 記事内フォーム」、本文に「カテゴリ／読んでいた記事URL」を付記。送信後にTimerexを案内（直リンクにはしない）。**LPの entry ID を変えたら `render.mjs` も直す。**
+- 一覧・トップ・カテゴリの相談は濃紺バンド（`ctaBand`）→ LP の `/#entry`。
+- GA4（G-1XXMP8Y1B4、saiyo-media・コーポレートと同じプロパティ）: `cta_click`（cta_location）／`form_start`／`generate_lead`（form_location=article）／`share`。
+- メディアトップは 課題→エリア（47都道府県を地域ブロックで全部）→相談バンド→業種→スカウト採用→テーマ の順。
+- 外部CDNは読まない（GA4の gtag.js だけ例外）。CSS・JS は `/media/assets/` に切り出し。ロゴ・ファビコンはルートの画像を参照。
+- アイキャッチ画像・OGP画像は未対応（saiyo-media と同じ）。
 
 ### LPからの導線
 
