@@ -177,6 +177,28 @@ for (const hub of HUBS) {
   }
 }
 
+/* ---------- 統合（2026-10-16） ----------
+ * 内容が重なる記事を1本にまとめた。
+ *   retired.json … 転送する記事 {slug: 転送先URL}。記事は作らず、転送ページだけ置く（一覧・検索・sitemapから外す）
+ *   imported/<slug>.json … saiyo-media（求人広告代理店メディア）の手書き記事の本文を、この記事に移したもの。
+ *                          切り口の生成文の代わりにこの本文を出す。元の saiyo-media 記事はこの記事へ転送している
+ * 対応表は saiyo-media の media-redirects.json と対。片方だけ直さない。 */
+const RETIRED = JSON.parse(readFileSync(resolve(HERE, 'retired.json'), 'utf8'));
+const IMPORTED_DIR = resolve(HERE, 'imported');
+const retiredArts = [];
+for (let i = articles.length - 1; i >= 0; i -= 1) {
+  if (RETIRED[articles[i].slug]) retiredArts.push(...articles.splice(i, 1));
+}
+for (const a of articles) {
+  const f = resolve(IMPORTED_DIR, `${a.slug}.json`);
+  if (!existsSync(f)) continue;
+  a.imported = JSON.parse(readFileSync(f, 'utf8'));
+  a.title = a.imported.title;
+  a.desc = a.imported.desc;
+}
+// ハブ・グループの本数表示は、転送した記事を除いた数にする（切り口との突き合わせは上で済んでいる）
+for (const hub of HUBS) hub.articles = articles.filter((a) => a.hub === hub.slug).length;
+
 /* ---------- 公開日（初出日を積み上げる） ---------- */
 const today = new Date().toISOString().slice(0, 10);
 let seen = {};
@@ -255,10 +277,17 @@ for (const a of articles) {
     `<li><a href="${hubUrl(h.slug)}">${esc(h.label)}</a><span>${esc(h.note.split('。')[0])}。</span></li>`).join('')}</ul>`;
 
   const closerHtml = h2('この記事のまとめ') + `<p>${esc(a.closer)}</p>`;
-  const toc = `<nav class="toc" aria-label="目次"><p class="toc__t">目次</p><ol>`
-    + heads.map((h) => `<li><a href="#${h.id}">${esc(h.text)}</a></li>`).join('') + `</ol></nav>`;
 
-  const bodyText =
+  // 移した本文は見出しに id（h1, h2…）が振ってあるので、目次はそこから作る
+  const imp = a.imported;
+  const impHeads = imp ? [...imp.html.matchAll(/<h2 id="([^"]+)">([\s\S]*?)<\/h2>/g)].map((m) => ({ id: m[1], text: m[2].replace(/<[^>]+>/g, '') })) : [];
+  const relHubImp = imp ? `<h2 id="rel">あわせて読みたい</h2><ul class="hublinks">${a.relHubs.map((h) =>
+    `<li><a href="${hubUrl(h.slug)}">${esc(h.label)}</a><span>${esc(h.note.split('。')[0])}。</span></li>`).join('')}</ul>` : '';
+  const tocHeads = imp ? impHeads : heads;
+  const toc = `<nav class="toc" aria-label="目次"><p class="toc__t">目次</p><ol>`
+    + tocHeads.map((h) => `<li><a href="#${h.id}">${esc(h.text)}</a></li>`).join('') + `</ol></nav>`;
+
+  const bodyText = imp ? imp.html.replace(/<[^>]+>/g, '') :
     a.sections.map((s) => s.p.join('') + (s.list ?? []).join('') + (s.after ?? []).join('')).join('') +
     a.qa.qa.map((x) => x.q + x.a).join('') + a.lead + a.closer;
   bodies.push(bodyText);
@@ -270,7 +299,7 @@ for (const a of articles) {
     description: a.desc,
     inLanguage: 'ja',
     datePublished: a.pubDate,
-    dateModified: a.pubDate,
+    dateModified: a.imported ? '2026-10-16' : a.pubDate,
     mainEntityOfPage: { '@type': 'WebPage', '@id': SITE + artUrl(a) },
     url: SITE + artUrl(a),
     author: AUTHOR_LD,
@@ -289,15 +318,16 @@ for (const a of articles) {
     <a class="meta-hub" href="${hubUrl(a.hub)}">${esc(a.hubLabel)}</a><a class="meta-theme" href="${catUrl(a.group)}">${esc(GROUP_LABEL[a.group])}</a>
     <span class="meta-date">公開日 ${jpDate(a.pubDate)}</span>
   </p>
-  <p class="lead-box">${esc(a.lead)}</p>
+  ${imp ? '' : `<p class="lead-box">${esc(a.lead)}</p>`}
   ${toc}
   <div class="body">
-${secHtml}
+${imp ? imp.html + '\n' + relHubImp : `${secHtml}
 ${qaHtml}
 ${relHubHtml}
-${closerHtml}
+${closerHtml}`}
   </div>
-  <div class="sources"><strong>この記事について</strong><p>${esc(DISCLAIMER)}</p><p class="lic">株式会社エージェントベスト／有料職業紹介事業 許可番号 13-ユ-316964</p></div>
+  ${imp && imp.sources ? `<div class="sources">${imp.sources}</div>
+  ` : ''}<div class="sources"><strong>この記事について</strong><p>${esc(DISCLAIMER)}</p><p class="lic">株式会社エージェントベスト／有料職業紹介事業 許可番号 13-ユ-316964</p></div>
   ${ctaBlock(a)}
   ${shareHtml(SITE + artUrl(a), a.title)}
   <section class="same-hub"><h2 class="block-title">${esc(a.hubLabel)}の他の記事</h2>
@@ -311,7 +341,7 @@ ${stickyCta(a)}`;
   const faqLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: a.qa.qa.map((x) => ({
+    mainEntity: (imp ? imp.faq : a.qa.qa).map((x) => ({
       '@type': 'Question', name: x.q,
       acceptedAnswer: { '@type': 'Answer', text: x.a },
     })),
@@ -325,6 +355,21 @@ ${stickyCta(a)}`;
     ogImage: addImg(artImg(a), { title: a.title, tag: a.hubLabel, groupLabel: GROUP_LABEL[a.group], group: a.group }),
     extraJsonLd: [breadcrumbLd(crumbs), articleLd, faqLd],
   }, body));
+}
+
+/* ---------- 転送ページ（統合した記事） ----------
+ * GitHub Pages ではサーバー側の301が使えないので、canonical＋meta refresh＋location.replace で転送する。
+ * noindex は付けない（canonical で評価を寄せる）。 */
+for (const a of retiredArts) {
+  const to = RETIRED[a.slug];
+  write(`media/${a.slug}/index.html`, `<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>移転しました｜${esc(MEDIA_NAME)}</title>
+<link rel="canonical" href="${esc(to)}">
+<meta http-equiv="refresh" content="0; url=${esc(to)}">
+<script>location.replace(${JSON.stringify(to)});</script>
+</head><body><p>この記事は内容の近い記事にまとめました。<a href="${esc(to)}">${esc(to)}</a> へ移動します。</p></body></html>
+`);
 }
 
 /* ---------- ハブページ ---------- */
@@ -512,7 +557,7 @@ for (const g of GROUPS) {
 // 残すと sitemap に無いページが公開されたままになるので、ここで消す。
 let removed = 0;
 {
-  const keep = new Set(articles.map((a) => a.slug));
+  const keep = new Set([...articles.map((a) => a.slug), ...retiredArts.map((a) => a.slug)]);
   const reserved = new Set(['hub', 'category', 'search', 'assets', 'img']);
   for (const name of readdirSync(OUT, { withFileTypes: true })) {
     if (!name.isDirectory() || reserved.has(name.name) || keep.has(name.name)) continue;
