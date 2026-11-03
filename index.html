@@ -280,12 +280,14 @@
     padding:clamp(24px,4vw,40px);box-shadow:var(--shadow);text-align:left;color:var(--ink)}
   .field{margin-bottom:18px}
   .field label{display:block;font-size:.86rem;font-weight:800;letter-spacing:.03em;margin-bottom:7px}
+  .opt{font-size:.64rem;font-weight:700;color:var(--ink);opacity:.6;border:1px solid currentColor;border-radius:999px;padding:.1em .7em;margin-left:.5em;letter-spacing:.08em;vertical-align:1px}
+  .field select{appearance:auto;cursor:pointer}
   .req{font-size:.64rem;font-weight:700;color:var(--accent-ink);border:1px solid var(--accent);border-radius:999px;
     padding:.1em .7em;margin-left:.5em;letter-spacing:.08em;vertical-align:1px}
-  .field input,.field textarea{width:100%;font-family:inherit;font-size:1rem;color:var(--ink);background:var(--paper);
+  .field input,.field select,.field textarea{width:100%;font-family:inherit;font-size:1rem;color:var(--ink);background:var(--paper);
     border:1px solid var(--line-strong);border-radius:10px;padding:.8em 1em;transition:border-color .2s,box-shadow .2s}
   .field textarea{resize:vertical;line-height:1.8}
-  .field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-tint)}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-tint)}
   .form-error{color:#B23B3B;font-size:.86rem;min-height:1.2em;margin-bottom:.4rem}
   .submit-btn{width:100%;justify-content:center;font-size:1rem;padding-block:1.05em}
   .submit-btn:disabled{opacity:.6;cursor:default;transform:none}
@@ -661,6 +663,20 @@
               <input type="email" id="email" name="email" required autocomplete="email">
             </div>
             <div class="field">
+              <label for="howfound">当社を知ったきっかけ <span class="opt">任意</span></label>
+              <select id="howfound" name="howfound">
+                <option value="">選択してください</option>
+                <option>検索（Google・Yahoo!など）</option>
+                <option>生成AI（ChatGPT・Gemini・Claudeなど）</option>
+                <option>記事・コラムを読んで</option>
+                <option>SNS（X・note・LinkedInなど）</option>
+                <option>ご紹介・口コミ</option>
+                <option>採用媒体・パートナー企業から</option>
+                <option>以前から知っていた・取引がある</option>
+                <option>その他</option>
+              </select>
+            </div>
+            <div class="field">
               <label for="message">お問い合わせ内容 <span class="req">必須</span></label>
               <textarea id="message" name="message" rows="6" required placeholder="例）28卒で2名採用したい。現在は他社のOfferBox運用代行を利用中で、比較のため見積もりがほしい。"></textarea>
             </div>
@@ -730,6 +746,18 @@
     var ENTRY={company:'entry.1620407772',name:'entry.2140471957',email:'entry.417521654',message:'entry.1952858857'};
     var SOURCE='OfferBox運用代行LP（scoutdaikou-offerbox.agent-best.net）';
 
+  // 知ったきっかけ（任意の選択）と流入元（最初に来たときの参照元・utm_source）を本文末に付ける
+  (function(){try{if(sessionStorage.getItem('ab_ref'))return;
+    var q='';try{q=new URLSearchParams(location.search).get('utm_source')||'';}catch(e){}
+    var r=document.referrer,h='';try{h=r?new URL(r).hostname:'';}catch(e){}
+    var v=q?('utm_source='+q+(h&&h!==location.hostname?'（'+h+'）':'')):(h&&h!==location.hostname?h:(r?'':'参照元なし'));
+    if(v)sessionStorage.setItem('ab_ref',v+' → '+location.pathname);}catch(e){}})();
+  var trail=function(){
+    var el=document.getElementById('howfound'),how=el&&el.value?el.value:'未回答',ref='';
+    try{ref=sessionStorage.getItem('ab_ref')||'';}catch(e){}
+    return '\n\n知ったきっかけ：'+how+'\n流入元：'+(ref||'不明');
+  };
+
     var form=document.getElementById('contact-form'),
         thanks=document.getElementById('thanks'),
         errBox=document.getElementById('form-error'),
@@ -749,7 +777,7 @@
       data.append(ENTRY.company,company);
       data.append(ENTRY.name,name);
       data.append(ENTRY.email,email);
-      data.append(ENTRY.message,message+'\n\n---\nお問い合わせ元：'+SOURCE);
+      data.append(ENTRY.message,message+trail()+'\n\n---\nお問い合わせ元：'+SOURCE);
 
       fetch(FORM_ACTION,{method:'POST',mode:'no-cors',body:data})
         .then(function(){

@@ -281,6 +281,14 @@ export const JS = String.raw`(function(){
   var FORM_ACTION='https://docs.google.com/forms/d/e/1FAIpQLSd8Zk9Rxsg292K8R_ttnRYa5d4uXMBkSFrnlEVTFts6feRx6g/formResponse';
   var ENTRY={company:'entry.1620407772',name:'entry.2140471957',email:'entry.417521654',message:'entry.1952858857'};
   var SOURCE='地方採用ラボ 記事内フォーム（scoutdaikou-offerbox.agent-best.net/media/）';
+
+  // 流入元（最初に来たときの参照元・utm_source）をタブ単位で覚え、送信時に本文末へ付ける
+  (function(){try{if(sessionStorage.getItem('ab_ref'))return;
+    var q='';try{q=new URLSearchParams(location.search).get('utm_source')||'';}catch(e){}
+    var r=document.referrer,h='';try{h=r?new URL(r).hostname:'';}catch(e){}
+    var v=q?('utm_source='+q+(h&&h!==location.hostname?'（'+h+'）':'')):(h&&h!==location.hostname?h:(r?'':'参照元なし'));
+    if(v)sessionStorage.setItem('ab_ref',v+' → '+location.pathname);}catch(e){}})();
+  var refLine=function(){var ref='';try{ref=sessionStorage.getItem('ab_ref')||'';}catch(e){}return '\n知ったきっかけ：記事（記事内フォーム）\n流入元：'+(ref||'不明');};
   function ev(name,params){try{if(window.gtag)gtag('event',name,params||{});}catch(e){}}
 
   document.addEventListener('click',function(e){
@@ -319,7 +327,7 @@ export const JS = String.raw`(function(){
       data.append(ENTRY.email,email);
       data.append(ENTRY.message,(message||'（相談内容の記入なし）')
         +'\n\nカテゴリ：'+form.getAttribute('data-hub')
-        +'\n読んでいた記事：'+form.getAttribute('data-title')+'\n'+location.origin+location.pathname
+        +'\n読んでいた記事：'+form.getAttribute('data-title')+'\n'+location.origin+location.pathname+refLine()
         +'\n\n---\nお問い合わせ元：'+SOURCE);
       fetch(FORM_ACTION,{method:'POST',mode:'no-cors',body:data})
         .then(function(){
