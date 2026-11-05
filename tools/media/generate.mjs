@@ -1,4 +1,4 @@
-// tools/media/generate.mjs … 「地方採用ラボ」（/media/）の全ページを生成する。
+// tools/media/generate.mjs … 「中小企業採用ラボ」（/media/）の全ページを生成する。
 //
 //   node tools/media/generate.mjs
 //
@@ -442,7 +442,7 @@ for (const g of GROUPS) {
 {
   const hubCount = HUBS.length;
   const latest = articles.slice(0, 0); // 全記事が同時公開なので「新着」は出さない
-  // 入口の並びは読者（地方の採用担当者）の探し方の順：課題→エリア→業種→スカウト採用→テーマ。
+  // 入口の並びは読者（中小・中堅企業の採用担当者）の探し方の順：課題→エリア→業種→スカウト採用→テーマ。
   // エリアは47都道府県を地域ブロックで区切って全部出す（16件だけ出すと自県が見つからない）。
   const ORDER = ['issue', 'area', 'industry', 'dr', 'theme'];
   const groupSec = (g) => {
@@ -468,7 +468,7 @@ for (const g of GROUPS) {
   <div class="wrap">
     <section class="mhero">
       <h1>${esc(MEDIA_NAME)}</h1>
-      <p class="mhero__lead">知名度でも予算でも大手に及ばない地方の中小・中堅企業が、それでも新卒を採るために何をすればいいのか。都道府県・業種・採用の課題・スカウト採用の切り口で、<strong>${articles.length.toLocaleString('en-US')}本</strong>（${hubCount}カテゴリ）の記事にまとめています。運営は、OfferBox運用代行を完全成果報酬型で提供する株式会社エージェントベストです。</p>
+      <p class="mhero__lead">知名度でも予算でも大手に及ばない中小・中堅企業が、それでも新卒を採るために何をすればいいのか。都道府県・業種・採用の課題・スカウト採用の切り口で、<strong>${articles.length.toLocaleString('en-US')}本</strong>（${hubCount}カテゴリ）の記事にまとめています。運営は、OfferBox運用代行を完全成果報酬型で提供する株式会社エージェントベストです。</p>
       <nav class="jump" aria-label="記事の探し方">
         ${ORDER.map((k) => `<a href="#${k}">${esc(G[k].label)}</a>`).join('')}<a href="/media/search/">キーワードで探す</a>
       </nav>
@@ -490,9 +490,9 @@ for (const g of GROUPS) {
 
   write('media/index.html', page({
     title: `${MEDIA_NAME}｜${MEDIA_TAGLINE}`,
-    desc: `地方の中小・中堅企業に向けた新卒採用のノウハウメディア。都道府県・業種・採用課題・ダイレクトリクルーティングの切り口で${articles.length.toLocaleString('en-US')}本の記事を公開しています。`,
+    desc: `中小・中堅企業に向けた新卒採用のノウハウメディア。都道府県・業種・採用課題・ダイレクトリクルーティングの切り口で${articles.length.toLocaleString('en-US')}本の記事を公開しています。`,
     canonical: `${SITE}/media/`,
-    ogImage: addImg(ogImg('top'), { title: `地方の中小・中堅企業のための新卒採用ノウハウ｜都道府県・業種・採用の課題・スカウト採用から${articles.length.toLocaleString('en-US')}本`, tag: '新卒採用ノウハウメディア', groupLabel: '', group: 'site', size: 58 }),
+    ogImage: addImg(ogImg('top'), { title: `中小・中堅企業のための新卒採用ノウハウ｜都道府県・業種・採用の課題・スカウト採用から${articles.length.toLocaleString('en-US')}本`, tag: '新卒採用ノウハウメディア', groupLabel: '', group: 'site', size: 58 }),
     extraJsonLd: [
       breadcrumbLd([{ name: MEDIA_NAME }]),
       { '@context': 'https://schema.org', '@type': 'WebSite', name: MEDIA_NAME, url: `${SITE}/media/`, inLanguage: 'ja',

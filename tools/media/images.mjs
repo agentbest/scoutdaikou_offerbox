@@ -1,4 +1,4 @@
-// tools/media/images.mjs … 「地方採用ラボ」のアイキャッチ兼OGP画像（1200×630 JPEG）を作る。
+// tools/media/images.mjs … 「中小企業採用ラボ」のアイキャッチ兼OGP画像（1200×630 JPEG）を作る。
 //
 //   node tools/media/generate.mjs   … 先に実行（tools/media/image-specs.json を書き出す）
 //   node tools/media/images.mjs     … 画像を作る（変わったものだけ描き直す）
@@ -10,7 +10,7 @@
 //    フォントは Windows の游ゴシック。別の環境で作り直すと字形が変わり、全画像が差分になる。
 // ⚠ 見た目はコーポレート（www.agent-best.net/media/）のアイキャッチに揃えている：
 //    濃色グラデーション・左上にカテゴリ枠・大きなタイトル・下にアクセント線・右上に円。
-//    色は地方採用ラボの #1C1C2E 系。アクセント色だけグループごとに変える。
+//    色は中小企業採用ラボの #1C1C2E 系。アクセント色だけグループごとに変える。
 // ⚠ image-hashes.json に「描いた内容のハッシュ」を残し、同じ内容なら描き直さない。
 //    テンプレート（TEMPLATE_VERSION）を変えたら数字を上げると全部描き直す。
 // ⚠ JPEG（品質88）にしているのは容量のため。グラデーション地は PNG だと1枚約190KB、JPEG で約45KB。
@@ -26,7 +26,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '../..');
 const SPEC_FILE = resolve(HERE, 'image-specs.json');
 const HASH_FILE = resolve(HERE, 'image-hashes.json');
-const TEMPLATE_VERSION = 2;
+const TEMPLATE_VERSION = 3;
 
 const EDGE_CANDIDATES = [
   process.env.EDGE_PATH,
@@ -88,7 +88,7 @@ body{font-family:"Yu Gothic","YuGothic","Meiryo",sans-serif;font-weight:700;colo
 <div class="in">
   <div class="tags">${spec.tag ? `<span class="tag">${esc(spec.tag)}</span>` : ''}${spec.groupLabel ? `<span class="grp">${esc(spec.groupLabel)}</span>` : ''}</div>
   <div class="t"><div class="main">${esc(main)}</div>${sub ? `<div class="sub">${esc(sub)}</div>` : ''}</div>
-  <div class="foot"><div class="line"></div><div class="brand"><b>地方採用ラボ</b><span>株式会社エージェントベスト</span></div></div>
+  <div class="foot"><div class="line"></div><div class="brand"><b>中小企業採用ラボ</b><span>株式会社エージェントベスト</span></div></div>
 </div>
 </body></html>`;
 }

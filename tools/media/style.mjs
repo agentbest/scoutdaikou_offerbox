@@ -1,6 +1,6 @@
-// tools/media/style.mjs … 地方採用ラボの CSS（/media/assets/media.css の原本）。
+// tools/media/style.mjs … 中小企業採用ラボの CSS（/media/assets/media.css の原本）。
 // 見た目はコーポレート（www.agent-best.net/media/）と求人広告代理店メディア（saiyo-media の build-media.js）の記事に揃えている。
-// BASE は saiyo-media の CSS をそのまま写したもの。向こうを直したらこちらも合わせる。EXTRA が地方採用ラボだけの部品。
+// BASE は saiyo-media の CSS をそのまま写したもの。向こうを直したらこちらも合わせる。EXTRA が中小企業採用ラボだけの部品。
 
 const BASE = `:root{
   --paper:#FFFFFF;--surface:#FFFFFF;--surface-2:#F6F8FA;--surface-3:#F0F2F5;
@@ -226,7 +226,7 @@ footer{background:var(--navy);color:var(--on-navy-soft);padding:46px 0 40px;font
 const EXTRA = `
 /* アイキャッチ（コーポレートの記事と同じ置き方：パンくずの下・タイトルの上） */
 .article .eyecatch{display:block;width:100%;height:auto;aspect-ratio:1200/630;border-radius:12px;margin:4px 0 20px;background:#1C1C2E}
-/* ===== 地方採用ラボだけの部品 ===== */
+/* ===== 中小企業採用ラボだけの部品 ===== */
 /* 記事冒頭のリード（コーポレートの記事には無いので、目次と同じ控えめな箱にする） */
 .article .lead-box{margin:0 0 1.8em;padding:1rem 1.3rem;border-left:4px solid var(--line-strong);background:var(--surface-2);border-radius:0 8px 8px 0;color:#384049;font-size:.97rem}
 /* よくある質問 */

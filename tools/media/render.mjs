@@ -1,4 +1,4 @@
-// tools/media/render.mjs … 「地方採用ラボ」の静的HTMLの外枠と、記事・一覧で使い回す部品。
+// tools/media/render.mjs … 「中小企業採用ラボ」の静的HTMLの外枠と、記事・一覧で使い回す部品。
 //
 // ⚠ media/ 配下はすべて生成物。直接編集しない（node tools/media/generate.mjs で作り直す）。
 // ⚠ 見た目はコーポレート（www.agent-best.net/media/）と求人広告代理店メディア（saiyo-media.agent-best.net/media/）の
@@ -12,24 +12,24 @@ import { esc } from './common.mjs';
 export { CSS } from './style.mjs';
 
 export const SITE = 'https://scoutdaikou-offerbox.agent-best.net';
-export const MEDIA_NAME = '地方採用ラボ';
-export const MEDIA_TAGLINE = '地方の中小・中堅企業のための、新卒採用ノウハウメディア';
+export const MEDIA_NAME = '中小企業採用ラボ';
+export const MEDIA_TAGLINE = '中小・中堅企業のための、新卒採用ノウハウメディア';
 export const COMPANY = '株式会社エージェントベスト';
 export const CTA_URL = '/#entry';
 const GA_ID = 'G-1XXMP8Y1B4';   // saiyo-media と同じプロパティ。サイト別はホスト名で分ける
 const TIMEREX = 'https://timerex.net/s/r_matsuoka/6666f3b5/';
 
 /* ---------------- 相談導線の文言 ----------------
- * 読者は地方の中小・中堅企業の採用担当者。記事のグループで悩みの入り口が違うので、文言を出し分ける。
+ * 読者は中小・中堅企業の採用担当者。記事のグループで悩みの入り口が違うので、文言を出し分ける。
  * ⚠ 金額は当社の運用代行（20万円／1名・完全成果報酬）だけ。媒体の料金・登録者数・最上級表現は書かない。
  * ⚠ 「必ず」「確実に」など成功を保証する表現を使わない。 */
 const CTA_COPY = {
   base: {
-    lead: '地方の新卒採用、スカウトで母集団をつくりませんか',
+    lead: '中小・中堅企業の新卒採用、スカウトで母集団をつくりませんか',
     points: ['知名度に頼らず、学生に直接オファーを送るOfferBoxの運用を代行します',
              '費用は入社承諾時のみの完全成果報酬（1名20万円）。成果が出なければ0円です',
-             '地方の中小・中堅企業からのご相談も承っています'],
-    label: '新卒採用の進め方を相談する', short: '地方の新卒採用を無料で相談',
+             '中小・中堅企業からのご相談も承っています'],
+    label: '新卒採用の進め方を相談する', short: '新卒採用を無料で相談',
     placeholder: '例：○○県で28卒を3名採用予定。説明会に学生が集まらないので、スカウトを試したい。' },
   issue: {
     lead: '採用の課題を、運用の側から一緒に整理しませんか',
@@ -57,7 +57,7 @@ const GROUP_NAV = [
   ['industry', '業種', '業種から探す'],
   ['issue', '採用の課題', '採用の課題から探す'],
   ['dr', 'スカウト採用', 'ダイレクトリクルーティング・OfferBox'],
-  ['theme', '地方採用のテーマ', '地方採用のテーマ'],
+  ['theme', '採用テーマ', '中小・中堅企業の採用テーマ'],
 ];
 const HEADER_NAV = ['area', 'industry', 'issue', 'dr'];
 
@@ -280,7 +280,7 @@ export function shareHtml(url, title) {
 export const JS = String.raw`(function(){
   var FORM_ACTION='https://docs.google.com/forms/d/e/1FAIpQLSd8Zk9Rxsg292K8R_ttnRYa5d4uXMBkSFrnlEVTFts6feRx6g/formResponse';
   var ENTRY={company:'entry.1620407772',name:'entry.2140471957',email:'entry.417521654',message:'entry.1952858857'};
-  var SOURCE='地方採用ラボ 記事内フォーム（scoutdaikou-offerbox.agent-best.net/media/）';
+  var SOURCE='中小企業採用ラボ 記事内フォーム（scoutdaikou-offerbox.agent-best.net/media/）';
 
   // 流入元（最初に来たときの参照元・utm_source）をタブ単位で覚え、送信時に本文末へ付ける
   (function(){try{if(sessionStorage.getItem('ab_ref'))return;

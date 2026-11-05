@@ -3,7 +3,7 @@
 - 公開URL: https://scoutdaikou-offerbox.agent-best.net/ （GitHub Pages、`.nojekyll` ＋ `CNAME`）
 - サービス: **OfferBox運用代行（完全成果報酬型）**。新卒採用したい企業向け。
 - アクセント色: ティール `#0D7E93`
-- リポジトリ構成は `index.html` / `CNAME` / `.nojekyll` / `README.md` / `.gitignore` ＋ **メディア「地方採用ラボ」（`media/` と生成器 `tools/media/`）**。以前同梱されていた microCMS の Next.js ブログテンプレート一式は**未使用のため2026-07-25に削除済み**。戻さない。
+- リポジトリ構成は `index.html` / `CNAME` / `.nojekyll` / `README.md` / `.gitignore` ＋ **メディア「中小企業採用ラボ」（`media/` と生成器 `tools/media/`）**。以前同梱されていた microCMS の Next.js ブログテンプレート一式は**未使用のため2026-07-25に削除済み**。戻さない。
 
 ## 訴求の軸
 
@@ -29,9 +29,9 @@
 
 かつては Timerex `https://timerex.net/s/r_matsuoka/6666f3b5/` へ直リンクしていたが、**2026-08-11のB2B窓口ルール統一で、ページ内フォーム受け＋サンクス画面に日程調整リンク、に変更済み**。直リンクに戻さない。
 
-## メディア「地方採用ラボ」（/media/）— 2026-09-12 立ち上げ
+## メディア「中小企業採用ラボ」（/media/）— 2026-09-12 立ち上げ
 
-地方の中小・中堅企業の採用担当者に向けた**新卒採用ノウハウメディア**。記事2,000本。
+中小・中堅企業の採用担当者に向けた**新卒採用ノウハウメディア**。記事2,000本。
 LPと同じドメイン配下（`https://scoutdaikou-offerbox.agent-best.net/media/`）に置いて、
 記事からOfferBox運用代行の相談導線（`/#entry`）へ送る。
 
@@ -58,7 +58,7 @@ tools/media/*.mjs を編集
 | `tools/media/angle-alts-area.mjs` / `angle-alts-area2.mjs` / `angle-alts-industry.mjs` / `angle-alts-issue.mjs` / `angle-alts-dr.mjs` / `angle-alts-theme.mjs` | **切り口の固定段落に持たせた言い換えの変種**（346箇所・692本）。キーは `"切り口slug:セクション番号:段落番号"`。グループごとに分けて持つ |
 | `tools/media/common.mjs` | seed固定の乱数、使い回す段落バンク、都道府県の言い換え（道内／都内／府内） |
 | `tools/media/render.mjs` | ページの外枠（ヘッダー・フッター・GA4）と部品（記事末フォーム・下部バー・相談バンド・シェア・監修者）、`media.js` の原本（`JS`）。**相談導線の文言はここ1か所**（`CTA_COPY`。グループで出し分け） |
-| `tools/media/style.mjs` | CSS（`/media/assets/media.css` の原本）。`BASE` は saiyo-media の `build-media.js` の CSS を写したもの、`EXTRA` が地方採用ラボだけの部品 |
+| `tools/media/style.mjs` | CSS（`/media/assets/media.css` の原本）。`BASE` は saiyo-media の `build-media.js` の CSS を写したもの、`EXTRA` が中小企業採用ラボだけの部品 |
 | `tools/media/generate.mjs` | 生成器の本体。自己点検（slug重複・タイトル重複・本文の完全一致・文字数・変種の使用状況）を出す。**切り口やハブを入れ替えたときに取り残される記事ディレクトリも消す** |
 | `tools/media/images.mjs` | アイキャッチ兼OGP画像（1200×630 JPEG）を作る。手元の **Microsoft Edge をヘッドレス起動**して DevTools Protocol で撮る（npm 依存なし・Windows の游ゴシック）。`generate.mjs` が書いた `image-specs.json` を読み、`image-hashes.json` と比べて変わったものだけ描く。**デザインを変えたら `TEMPLATE_VERSION` を上げる**（全部描き直し）。`--only <文字列>` で一部だけ試し描きできる |
 | `tools/media/image-specs.json` / `image-hashes.json` | 画像の描画指示（生成物）／描いた内容のハッシュ。どちらも commit する |
@@ -72,7 +72,7 @@ tools/media/*.mjs を編集
 | 業種から探す | 22 | 14本 | 308 |
 | 採用の課題から探す | 32 | 14本 | 448 |
 | ダイレクトリクルーティング・OfferBox | 16 | 12本 | 192 |
-| 地方採用のテーマ | 14 | 8本 | 112 |
+| 中小・中堅企業の採用テーマ | 14 | 8本 | 112 |
 
 ⚠ **ハブを増やしたら `hubs.mjs` の `articles` をそのグループの切り口の数と一致させる。** 合わないと生成器が止まる。
 課題・DR・テーマのハブを増やしたときは **`hub-points.mjs` にも足す**（無いと止まる）。
@@ -143,7 +143,7 @@ saiyo-media（求人広告代理店メディア）と内容が重なる記事を
   **白地×#1C1C2E**、見出しはグレー帯＋左線、メタはチップ。**LPのティールはメディアでは使わない**（LPの配色を変えてもメディアは追従しない）。
 - 記事の並び: パンくず→タイトル→メタ（ハブ・グループ・公開日）→リード→目次→本文（Q&A・あわせて読みたい・まとめ）→この記事について（DISCLAIMER）→**記事末フォーム**→シェア→同じハブの他の記事→監修者（松岡・SNSリンク）。下部バー（`.sticky-cta`）あり。
 - JSON-LD: Article（author＝松岡の Person、publisher＝`https://www.agent-best.net/#organization`）＋ BreadcrumbList ＋ FAQPage。
-- **記事末フォーム**はLPと同じGoogleフォーム・同じ entry ID（`render.mjs` の `JS`）。SOURCE＝「地方採用ラボ 記事内フォーム」、本文に「カテゴリ／読んでいた記事URL」を付記。送信後にTimerexを案内（直リンクにはしない）。**LPの entry ID を変えたら `render.mjs` も直す。**
+- **記事末フォーム**はLPと同じGoogleフォーム・同じ entry ID（`render.mjs` の `JS`）。SOURCE＝「中小企業採用ラボ 記事内フォーム」、本文に「カテゴリ／読んでいた記事URL」を付記。送信後にTimerexを案内（直リンクにはしない）。**LPの entry ID を変えたら `render.mjs` も直す。**
 - 一覧・トップ・カテゴリの相談は濃紺バンド（`ctaBand`）→ LP の `/#entry`。
 - GA4（G-1XXMP8Y1B4、saiyo-media・コーポレートと同じプロパティ）: `cta_click`（cta_location）／`form_start`／`generate_lead`（form_location=article）／`share`。
 - メディアトップは 課題→エリア（47都道府県を地域ブロックで全部）→相談バンド→業種→スカウト採用→テーマ の順。
@@ -156,7 +156,7 @@ saiyo-media（求人広告代理店メディア）と内容が重なる記事を
 
 ### LPからの導線
 
-`index.html` のナビ右側「採用ノウハウ」とフッター「地方採用ラボ（採用ノウハウメディア）」から `/media/` へ。
+`index.html` のナビ右側「採用ノウハウ」とフッター「中小企業採用ラボ（採用ノウハウメディア）」から `/media/` へ。
 ⚠ **ナビは幅430px以下でリンクを隠している**（隠さないとCTAボタンが押し出される）。
 
 ### Search Console
