@@ -2,7 +2,7 @@
 
 株式会社エージェントベストの「OfferBox運用代行｜完全成果報酬型」サービスLP。
 
-- 公開URL: https://scoutdaikou-offerbox.agent-best.net/
+- 公開URL: https://offerboxapp.com/
 - 配信: GitHub Pages（main / ルート）。実体は自己完結の静的 `index.html` 1枚（外部CDN・ローカル資産に非依存）。
 
 ## お問い合わせフォーム
@@ -21,7 +21,7 @@
 中小・中堅企業の採用担当者向けの新卒採用ノウハウメディア。記事2,000本。
 LPと同じドメイン配下に置き、記事から運用代行の相談導線（`/#entry`）へ送っています。
 
-- 公開URL: https://scoutdaikou-offerbox.agent-best.net/media/
+- 公開URL: https://offerboxapp.com/media/
 - カテゴリ: エリア（47都道府県）／業種（22）／採用の課題（32）／ダイレクトリクルーティング・OfferBox（16）／中小・中堅企業の採用テーマ（14）＝ 131カテゴリ
 
 ### ⚠ `media/` は生成物です。直接編集しないでください

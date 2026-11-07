@@ -1,6 +1,6 @@
 # scoutdaikou_offerbox — OfferBox運用代行LP（採用企業向け・B2B）
 
-- 公開URL: https://scoutdaikou-offerbox.agent-best.net/ （GitHub Pages、`.nojekyll` ＋ `CNAME`）
+- 公開URL: https://offerboxapp.com/ （GitHub Pages、`.nojekyll` ＋ `CNAME`）
 - サービス: **OfferBox運用代行（完全成果報酬型）**。新卒採用したい企業向け。
 - アクセント色: ティール `#0D7E93`
 - リポジトリ構成は `index.html` / `CNAME` / `.nojekyll` / `README.md` / `.gitignore` ＋ **メディア「中小企業採用ラボ」（`media/` と生成器 `tools/media/`）**。以前同梱されていた microCMS の Next.js ブログテンプレート一式は**未使用のため2026-07-25に削除済み**。戻さない。
@@ -32,7 +32,7 @@
 ## メディア「中小企業採用ラボ」（/media/）— 2026-09-12 立ち上げ
 
 中小・中堅企業の採用担当者に向けた**新卒採用ノウハウメディア**。記事2,000本。
-LPと同じドメイン配下（`https://scoutdaikou-offerbox.agent-best.net/media/`）に置いて、
+LPと同じドメイン配下（`https://offerboxapp.com/media/`）に置いて、
 記事からOfferBox運用代行の相談導線（`/#entry`）へ送る。
 
 ### ⚠ ビルドフロー（最重要）
@@ -176,7 +176,7 @@ saiyo-media（求人広告代理店メディア）と内容が重なる記事を
 | scout.agent-best.net | agentbest/scout | スカウト代行（主要媒体全般） | インディゴ #4C4FD8 |
 | green.agent-best.net | agentbest/green | Green運用代行（成功報酬・入社時1名50万円） | グリーン #12A150 |
 | infra.agent-best.net | agentbest/infra | Infra 長期インターン採用代理店 | アンバー #C2610C |
-| scoutdaikou-offerbox.agent-best.net | agentbest/scoutdaikou_offerbox | OfferBox運用代行 | ティール #0D7E93 |
+| offerboxapp.com | agentbest/scoutdaikou_offerbox | OfferBox運用代行 | ティール #0D7E93 |
 
 ### 共通の型（新規B2B LPはこれをコピーする）
 
