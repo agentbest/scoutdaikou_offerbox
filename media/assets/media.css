@@ -329,6 +329,8 @@ footer{background:var(--navy);color:var(--on-navy-soft);padding:46px 0 40px;font
 .art-side{min-width:0;max-width:720px;margin:0 auto;padding-bottom:64px}
 .block-sub{display:inline-block;margin-left:.6em;font-size:.8rem;font-weight:400;color:var(--ink-faint)}
 .same-hub .pgrid{margin-top:12px}
+/* 1カラム（1023px以下）では記事末フォームのすぐ下に来て重複するので、記事サイドバーの相談ボックスは隠す（2026-11-14） */
+@media (max-width:1023px){.art-side .side-cta{display:none}}
 @media (min-width:1024px){
   .playout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:40px;align-items:start}
   .pside{margin-top:2em}
