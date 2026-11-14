@@ -47,6 +47,8 @@ const CTA_COPY = {
     placeholder: '例：28卒で5名採用予定。オファーの承認率が低いので、文面と検索条件を見直したい。' },
 };
 const copyOf = (group) => CTA_COPY[group] || CTA_COPY.base;
+/** サイドバーの相談枠の見出し（下部バーと同じ短い文言） */
+export const ctaShort = (group) => copyOf(group).short;
 const TRUST = ['相談無料', '営業のお電話はしません', '完全成果報酬（1名20万円）', '厚生労働大臣許可 13-ユ-316964'];
 
 /* ---------------- 共通レイアウト ---------------- */

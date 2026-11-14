@@ -41,7 +41,7 @@ import { ISSUE_ALTS } from './angle-alts-issue.mjs';
 import { DR_ALTS } from './angle-alts-dr.mjs';
 import { THEME_ALTS } from './angle-alts-theme.mjs';
 import { CSS, JS, SITE, MEDIA_NAME, MEDIA_TAGLINE, page, crumb, articleCrumb, breadcrumbLd, ctaBlock, ctaBand, stickyCta,
-  shareHtml, AUTHOR, AUTHOR_LD, PUBLISHER_LD } from './render.mjs';
+  shareHtml, ctaShort, AUTHOR, AUTHOR_LD, PUBLISHER_LD } from './render.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '../..');
@@ -245,7 +245,27 @@ const acard = (a) => `<li><a href="${artUrl(a)}">
 const artList = (list) => `<ul class="art-list">${list.map(acard).join('')}</ul>`;
 const hubCard = (h) => `<a class="hubcard" href="${hubUrl(h.slug)}"><span class="t">${esc(h.label)}</span><span class="c">${h.articles}本</span></a>`;
 
-const DISCLAIMER = `この記事は、${'株式会社エージェントベスト'}が新卒採用の支援で得た知見をもとに構成した実務向けの解説です。特定の企業の事例や、年によって変動する統計値は扱っていません。制度・市況・各サービスの仕様は変わりますので、実際の判断にあたっては一次情報をご確認ください。`;
+/* ---------- ポータル風の部品（2026-11-14） ----------
+ * サムネイルは記事のアイキャッチ（/media/img/{slug}.jpg、images.mjs が作る 1200×630）をそのまま使う。
+ * ⚠ アクセス数のデータは無いので「人気」「ランキング」「よく読まれている」とは書かない。 */
+const thumb = (a) => `<img class="thumb" src="${artImg(a)}" alt="" width="1200" height="630" loading="lazy" decoding="async">`;
+// カード（lg＝注目の大きいカード、md＝グリッド、sm＝横並びの小さいカード）
+const pcard = (a, size = 'md') => `<li class="pcard pcard--${size}"><a href="${artUrl(a)}">
+      <span class="pcard__img">${thumb(a)}</span>
+      <span class="pcard__body">
+        <span class="pcard__cat pcat--${a.group}">${esc(a.hubLabel)}</span>
+        <span class="pcard__t">${esc(a.title)}</span>${size === 'lg' ? `
+        <span class="pcard__d">${esc(a.desc)}</span>` : ''}
+        <time class="pcard__date" datetime="${a.pubDate}">${jpDate(a.pubDate)}</time>
+      </span>
+    </a></li>`;
+const pgrid = (list, cls = '') => `<ul class="pgrid${cls ? ' ' + cls : ''}">${list.map((a) => pcard(a)).join('')}</ul>`;
+// サイドバーのカテゴリ一覧（件数つき）
+const groupCount = (k) => articles.filter((a) => a.group === k).length;
+const sideCats = (active = '') => `<ul class="side-cats">${GROUPS.map((g) =>
+  `<li><a href="${catUrl(g.key)}"${g.key === active ? ' class="on"' : ''}><span>${esc(g.label)}</span><span class="n">${groupCount(g.key)}</span></a></li>`).join('')}</ul>`;
+
+const DISCLAIMER =`この記事は、${'株式会社エージェントベスト'}が新卒採用の支援で得た知見をもとに構成した実務向けの解説です。特定の企業の事例や、年によって変動する統計値は扱っていません。制度・市況・各サービスの仕様は変わりますので、実際の判断にあたっては一次情報をご確認ください。`;
 
 /* ---------- 記事ページ ---------- */
 let bodies = [];
@@ -310,7 +330,27 @@ for (const a of articles) {
   };
 
   // 並びはコーポレート・saiyo-media の記事と同じ：パンくず→タイトル→メタ→目次→本文→注記→相談→シェア→同じカテゴリ→監修
-  const body = `<main class="wrap article">
+  // サイドバーの「同じカテゴリの記事」は、本文下の関連記事（先頭6本）と重ならない次の5本。足りなければ先頭から
+  const sideList = (siblings.length > 6 ? siblings.slice(6, 11) : siblings.slice(0, 5));
+  const side = `<aside class="art-side" aria-label="関連する記事とカテゴリ">
+  <section class="side-box">
+    <h2 class="side-t">${esc(a.hubLabel)}の記事</h2>
+    <ul class="side-list">${sideList.map((x) => pcard(x, 'sm')).join('')}</ul>
+    <p class="more"><a href="${hubUrl(a.hub)}">もっと見る →</a></p>
+  </section>
+  <section class="side-box">
+    <h2 class="side-t">カテゴリ</h2>
+    ${sideCats(a.group)}
+  </section>
+  <div class="side-box side-cta side-sticky">
+    <p class="side-cta__t">${esc(ctaShort(a.group))}</p>
+    <p class="side-cta__d">成果が出るまで0円（完全成果報酬・1名20万円）。相談だけでもかまいません。</p>
+    <a class="btn btn-primary" href="#consult" data-cta="article-side">相談する →</a>
+  </div>
+</aside>`;
+
+  const body = `<div class="wrap art-layout">
+<main class="article">
   ${articleCrumb(crumbs)}
   <img class="eyecatch" src="${artImg(a)}" alt="" width="1200" height="630">
   <h1>${esc(a.title)}</h1>
@@ -330,12 +370,14 @@ ${closerHtml}`}
   ` : ''}<div class="sources"><strong>この記事について</strong><p>${esc(DISCLAIMER)}</p><p class="lic">株式会社エージェントベスト／有料職業紹介事業 許可番号 13-ユ-316964</p></div>
   ${ctaBlock(a)}
   ${shareHtml(SITE + artUrl(a), a.title)}
-  <section class="same-hub"><h2 class="block-title">${esc(a.hubLabel)}の他の記事</h2>
-    ${artList(related)}
+  <section class="same-hub"><h2 class="block-title">関連記事<span class="block-sub">${esc(a.hubLabel)}の他の記事</span></h2>
+    ${pgrid(related, 'pgrid--rel')}
     <p class="more"><a href="${hubUrl(a.hub)}">${esc(a.hubLabel)}の記事をすべて見る →</a></p>
   </section>
   ${AUTHOR}
 </main>
+${side}
+</div>
 ${stickyCta(a)}`;
 
   const faqLd = {
@@ -441,50 +483,103 @@ for (const g of GROUPS) {
 /* ---------- メディアトップ ---------- */
 {
   const hubCount = HUBS.length;
-  const latest = articles.slice(0, 0); // 全記事が同時公開なので「新着」は出さない
   // 入口の並びは読者（中小・中堅企業の採用担当者）の探し方の順：課題→エリア→業種→スカウト採用→テーマ。
   // エリアは47都道府県を地域ブロックで区切って全部出す（16件だけ出すと自県が見つからない）。
   const ORDER = ['issue', 'area', 'industry', 'dr', 'theme'];
+  const G = Object.fromEntries(GROUPS.map((g) => [g.key, g]));
+
+  // 注目の記事：saiyo-media から移した手書きの記事（imported）を、スカウト採用→採用の課題の順に生成順で取る（決定的）。
+  // サイドバーの「編集部のおすすめ」はその続き。⚠ アクセス数は持っていないので「人気」とは書かない。
+  const picks = ['dr', 'issue', 'theme', 'industry', 'area'].flatMap((k) => articles.filter((a) => a.imported && a.group === k));
+  const feat = picks.slice(0, 5);
+  const recommend = picks.slice(5, 10);
+  // 新着記事：公開日（first-seen.json）の新しい順。同じ日は生成順
+  const latest = articles.map((a, i) => [a, i])
+    .sort((x, y) => (y[0].pubDate.localeCompare(x[0].pubDate)) || (x[1] - y[1]))
+    .map((x) => x[0]).slice(0, 8);
+
   const groupSec = (g) => {
     const hubs = HUBS.filter((h) => h.group === g.key);
     const total = hubs.reduce((n, h) => n + h.articles, 0);
+    // カテゴリ別のカード：先頭6ハブの1本目ずつ（ハブが偏らないように）
+    const cards = hubs.slice(0, 6).map((h) => (byHub.get(h.slug) ?? [])[0]).filter(Boolean);
     const grid = g.key === 'area'
       ? BLOCKS.map((b) => {
           const hs = hubs.filter((h) => PREF_BY_SLUG.get(h.pref).block === b.key);
           return hs.length ? `<p class="blocklabel">${esc(b.label)}</p><div class="hubgrid">${hs.map(hubCard).join('')}</div>` : '';
         }).join('')
       : `<div class="hubgrid">${hubs.map(hubCard).join('')}</div>`;
-    return `<section class="msec" id="${g.key}">
-      <h2>${esc(g.label)}</h2>
+    return `<section class="msec psec" id="${g.key}">
+      <div class="psec__h"><h2>${esc(g.label)}</h2><a class="psec__more" href="${catUrl(g.key)}">もっと見る →</a></div>
       <p class="msec__note">${esc(g.lead)}（${hubs.length}カテゴリ・${total}本）</p>
+      ${pgrid(cards)}
+      <p class="blocklabel psec__hubs">カテゴリから探す</p>
       ${grid}
       <p class="more"><a href="${catUrl(g.key)}">${esc(g.label)}の一覧へ →</a></p>
     </section>`;
   };
-  const G = Object.fromEntries(GROUPS.map((g) => [g.key, g]));
+
+  const side = `<aside class="pside" aria-label="おすすめとカテゴリ">
+      <section class="side-box">
+        <h2 class="side-t">編集部のおすすめ</h2>
+        <ol class="side-rank">${recommend.map((a) => `<li><a href="${artUrl(a)}"><span class="t">${esc(a.title)}</span><span class="c">${esc(a.hubLabel)}</span></a></li>`).join('')}</ol>
+      </section>
+      <section class="side-box">
+        <h2 class="side-t">カテゴリ</h2>
+        ${sideCats()}
+      </section>
+      <div class="side-box side-cta">
+        <p class="side-cta__t">新卒採用を無料で相談</p>
+        <p class="side-cta__d">採用人数・時期・体制から、スカウトの進め方を一緒に整理します。成果が出るまで0円（完全成果報酬・1名20万円）。</p>
+        <a class="btn btn-primary" href="/#entry" data-cta="media-top-side">無料で相談する →</a>
+      </div>
+      <section class="side-box">
+        <h2 class="side-t">タグ</h2>
+        <ul class="side-tags">${HUBS.filter((h) => h.group === 'dr' || h.group === 'issue').slice(0, 24).map((h) => `<li><a href="${hubUrl(h.slug)}">#${esc(h.label)}</a></li>`).join('')}</ul>
+      </section>
+    </aside>`;
 
   const body = `${crumb([{ name: 'OfferBox運用代行', url: '/' }, { name: MEDIA_NAME }])}
-<main class="mtop">
+<main class="mtop ptop">
   <div class="wrap">
+    <nav class="ptabs" aria-label="カテゴリ">
+      <a href="/media/" class="on" aria-current="page">すべて</a>${ORDER.map((k) => `<a href="${catUrl(k)}">${esc(G[k].label)}</a>`).join('')}<a href="/media/search/">キーワードで探す</a>
+    </nav>
     <section class="mhero">
       <h1>${esc(MEDIA_NAME)}</h1>
       <p class="mhero__lead">知名度でも予算でも大手に及ばない中小・中堅企業が、それでも新卒を採るために何をすればいいのか。都道府県・業種・採用の課題・スカウト採用の切り口で、<strong>${articles.length.toLocaleString('en-US')}本</strong>（${hubCount}カテゴリ）の記事にまとめています。運営は、OfferBox運用代行を完全成果報酬型で提供する株式会社エージェントベストです。</p>
-      <nav class="jump" aria-label="記事の探し方">
-        ${ORDER.map((k) => `<a href="#${k}">${esc(G[k].label)}</a>`).join('')}<a href="/media/search/">キーワードで探す</a>
-      </nav>
+      <form class="psearch" action="/media/search/" method="get" role="search">
+        <input type="search" name="q" placeholder="例：母集団形成、スカウト文面、北海道" aria-label="記事をキーワードで探す">
+        <button type="submit" class="btn btn-primary">検索</button>
+      </form>
       <aside class="cta-inline">
         <p>読んでも自社でどう動くか決めきれないときは、採用人数・時期・体制からスカウトの進め方を一緒に整理します（相談無料・成果が出るまで0円）。</p>
         <a href="/#entry" data-cta="media-top-hero">無料で相談する</a>
       </aside>
     </section>
 
-    ${ORDER.slice(0, 2).map((k) => groupSec(G[k])).join('\n    ')}
+    <div class="playout">
+      <div class="pmain">
+        <section class="pfeat" aria-labelledby="pfeat-t">
+          <div class="psec__h"><h2 id="pfeat-t">注目の記事</h2></div>
+          <ul class="pfeat__grid">${feat.map((a, i) => pcard(a, i === 0 ? 'lg' : 'sm')).join('')}</ul>
+        </section>
 
-    ${ctaBand('base', 'media-top-mid')}
+        <section class="pnew" aria-labelledby="pnew-t">
+          <div class="psec__h"><h2 id="pnew-t">新着記事</h2><a class="psec__more" href="/media/search/">記事を探す →</a></div>
+          ${pgrid(latest)}
+        </section>
 
-    ${ORDER.slice(2).map((k) => groupSec(G[k])).join('\n    ')}
+        ${ORDER.slice(0, 2).map((k) => groupSec(G[k])).join('\n        ')}
 
-    ${ctaBand('dr', 'media-top-end')}
+        ${ctaBand('base', 'media-top-mid')}
+
+        ${ORDER.slice(2).map((k) => groupSec(G[k])).join('\n        ')}
+
+        ${ctaBand('dr', 'media-top-end')}
+      </div>
+      ${side}
+    </div>
   </div>
 </main>`;
 
@@ -499,7 +594,7 @@ for (const g of GROUPS) {
         publisher: { '@type': 'Organization', name: '株式会社エージェントベスト', url: 'https://www.agent-best.net/' } },
     ],
   }, body));
-  void latest;
+
 }
 
 /* ---------- 検索 ---------- */
@@ -542,6 +637,7 @@ for (const g of GROUPS) {
   fetch('/media/search.json').then(function(r){return r.json();}).then(function(d){
     items=d.items; hits.textContent=items.length+'件'; render();
   }).catch(function(){ hits.textContent='検索インデックスを読み込めませんでした。'; });
+  try{var pq=new URLSearchParams(location.search).get('q');if(pq)q.value=pq;}catch(e){}
   q.addEventListener('input',render); g.addEventListener('change',render);
 })();
 </script>`;

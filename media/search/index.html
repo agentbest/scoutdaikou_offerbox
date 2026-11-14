@@ -90,6 +90,7 @@
   fetch('/media/search.json').then(function(r){return r.json();}).then(function(d){
     items=d.items; hits.textContent=items.length+'件'; render();
   }).catch(function(){ hits.textContent='検索インデックスを読み込めませんでした。'; });
+  try{var pq=new URLSearchParams(location.search).get('q');if(pq)q.value=pq;}catch(e){}
   q.addEventListener('input',render); g.addEventListener('change',render);
 })();
 </script><footer>
